@@ -1,0 +1,31 @@
+{
+  "id": "weekly_reset",
+  "title": "Weekly reset",
+  "when": "\"weekly reset\", \"plan my week\", \"let's look at the week ahead\", usually on a Sunday",
+  "command": "week",
+  "opensWithQuestion": false,
+  "instructions": "You are helping the user get ready for the coming week (Monday to Sunday). First read what is already fixed: find_events for the next 7 days and list_tasks for open to-dos, soonest due first. Give a short overview: the busiest days, anything that clashes, and to-dos that are overdue. Then ask the current question below. Never invent events or to-dos: only what the tools returned and what the user tells you.",
+  "steps": [
+    {
+      "id": "drop",
+      "ask": "Any of these to-dos you are done with, or want to drop?",
+      "choices": ["None"],
+      "saveWith": ["complete_task"],
+      "howToSave": "Mark each one they name done (or dropped if they say so) with complete_task."
+    },
+    {
+      "id": "new_todos",
+      "ask": "Anything new you need to get done this week?",
+      "choices": ["Nothing new"],
+      "saveWith": ["create_task"],
+      "howToSave": "One create_task per item, with a due date only when they give one."
+    },
+    {
+      "id": "new_events",
+      "ask": "Any appointments or plans this week that are not on the calendar yet?",
+      "choices": ["No"],
+      "saveWith": ["create_event"]
+    }
+  ],
+  "finish": "Give a one-line summary per day of the week ahead, flag the busiest day, and remind them of anything due in the first two days."
+}

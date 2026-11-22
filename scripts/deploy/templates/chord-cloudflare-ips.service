@@ -1,0 +1,11 @@
+# Refreshes nginx's list of Cloudflare addresses (installed by deploy.sh).
+# See /usr/local/lib/chord/refresh-cloudflare-ips.sh. A failed run leaves the
+# current list in place; `journalctl -u chord-cloudflare-ips` says why.
+[Unit]
+Description=Refresh nginx's Cloudflare address ranges
+Wants=network-online.target
+After=network-online.target nginx.service
+
+[Service]
+Type=oneshot
+ExecStart=/bin/sh /usr/local/lib/chord/refresh-cloudflare-ips.sh

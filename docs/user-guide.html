@@ -1,0 +1,624 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chord — User Guide</title>
+<style>
+  :root {
+    --bg: #F7F6F2;
+    --card: #FFFFFF;
+    --text: #1A1A18;
+    --muted: #7A7970;
+    --border: #E5E3DC;
+    --accent: #5B4FCF;
+    --accent-dark: #3C3489;
+    --accent-light: #EDE9FA;
+    --green: #15803D;
+  }
+
+  * { box-sizing: border-box; }
+
+  html { -webkit-text-size-adjust: 100%; }
+
+  body {
+    margin: 0;
+    background: #DEDCD6;
+    color: var(--text);
+    font-family: "Segoe UI", Inter, -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
+    font-size: 10.5pt;
+    line-height: 1.45;
+  }
+
+  .page {
+    width: 8.5in;
+    min-height: 11in;
+    margin: 16px auto;
+    padding: 0.5in 0.55in;
+    background: var(--bg);
+    box-shadow: 0 2px 14px rgba(0,0,0,.18);
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── masthead ── */
+  .masthead {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 18px;
+    border-bottom: 2.5px solid var(--accent);
+    padding-bottom: 9px;
+  }
+  .wordmark {
+    font-size: 27pt;
+    font-weight: 800;
+    letter-spacing: -.02em;
+    color: var(--accent);
+    line-height: 1;
+  }
+  .masthead .kicker {
+    font-size: 7.5pt;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 700;
+    margin-bottom: 3px;
+  }
+  .masthead .right {
+    text-align: right;
+    font-size: 8.5pt;
+    color: var(--muted);
+    line-height: 1.35;
+  }
+
+  h1.lede {
+    font-size: 17pt;
+    line-height: 1.2;
+    letter-spacing: -.015em;
+    margin: 13px 0 6px;
+    font-weight: 800;
+    max-width: 6.6in;
+  }
+  p.sub {
+    margin: 0 0 4px;
+    color: #45443E;
+    max-width: 7in;
+  }
+
+  h2 {
+    font-size: 8.5pt;
+    letter-spacing: .13em;
+    text-transform: uppercase;
+    color: var(--accent-dark);
+    font-weight: 800;
+    margin: 12px 0 8px;
+    padding-bottom: 4px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* ── the model strip: two sources → one result ── */
+  .flow {
+    display: flex;
+    align-items: stretch;
+    gap: 9px;
+    margin-top: 12px;
+  }
+  .flow .box {
+    flex: 1;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 11px;
+  }
+  .flow .box.out {
+    flex: 1.15;
+    background: var(--accent-light);
+    border-color: #D8D0F4;
+  }
+  .flow .lab {
+    font-size: 7.5pt;
+    font-weight: 800;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--accent-dark);
+    margin-bottom: 2px;
+  }
+  .flow .box p { margin: 0; font-size: 8.5pt; line-height: 1.35; color: #4A4943; }
+  .flow .op {
+    align-self: center;
+    font-size: 15pt;
+    font-weight: 800;
+    color: var(--accent);
+    line-height: 1;
+  }
+
+  /* ── screenshot cards ── */
+  .row {
+    display: grid;
+    gap: 13px;
+    align-items: start;
+  }
+  .row.three { grid-template-columns: repeat(3, 1fr); }
+  .row.four  { grid-template-columns: repeat(4, 1fr); }
+
+  .shot {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    break-inside: avoid;
+  }
+  /* Phone captures are ~1:2.2, far too tall to print three-up. Show a fixed
+     window onto each one; object-position picks the part that matters. */
+  .shot img {
+    display: block;
+    width: 100%;
+    height: 196px;
+    object-fit: cover;
+    object-position: top center;
+    border-bottom: 1px solid var(--border);
+  }
+  .row.compact .shot img { height: 110px; }
+  .row.four .shot img { height: 268px; }
+
+  .shot .cap { padding: 7px 9px 9px; }
+  .shot .step {
+    display: inline-block;
+    background: var(--accent);
+    color: #fff;
+    font-size: 7pt;
+    font-weight: 800;
+    letter-spacing: .06em;
+    border-radius: 99px;
+    padding: 1.5px 7px;
+    margin-bottom: 4px;
+  }
+  .shot .step.plain { background: var(--accent-light); color: var(--accent-dark); }
+  .shot h3 {
+    margin: 0 0 3px;
+    font-size: 9.5pt;
+    font-weight: 700;
+    line-height: 1.25;
+  }
+  .shot p {
+    margin: 0;
+    font-size: 8pt;
+    line-height: 1.4;
+    color: #4A4943;
+  }
+  .shot p .tap { color: var(--accent-dark); font-weight: 700; }
+  .shot p em { color: var(--muted); font-style: italic; }
+
+  /* ── callout ── */
+  .callout {
+    margin-top: 12px;
+    background: var(--accent-light);
+    border: 1px solid #D8D0F4;
+    border-left: 4px solid var(--accent);
+    border-radius: 8px;
+    padding: 10px 13px;
+  }
+  .callout strong { color: var(--accent-dark); }
+  .callout p { margin: 0; font-size: 9pt; }
+
+  /* ── plain feature list ── */
+  ul.ticks {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5px 20px;
+  }
+  ul.ticks li {
+    font-size: 9pt;
+    padding-left: 16px;
+    position: relative;
+    line-height: 1.4;
+  }
+  ul.ticks li::before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    color: var(--green);
+    font-weight: 800;
+  }
+  ul.ticks b { font-weight: 700; }
+
+  .foot {
+    margin-top: auto;
+    padding-top: 11px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    font-size: 7.5pt;
+    color: var(--muted);
+  }
+
+  /* ── setup page: numbered steps, bullets only ── */
+  .steps { margin-top: 20px; }
+  .stepblock {
+    display: flex;
+    gap: 16px;
+    padding: 16px 0;
+    border-top: 1px solid var(--border);
+  }
+  .stepblock:last-of-type { border-bottom: 1px solid var(--border); }
+  .stepblock .num {
+    flex: 0 0 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: #fff;
+    font-size: 13pt;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+  }
+  .stepblock .body { flex: 1; }
+  .stepblock h3 {
+    margin: 4px 0 7px;
+    font-size: 13pt;
+    font-weight: 800;
+    letter-spacing: -.01em;
+  }
+  .stepblock h3 .opt {
+    font-size: 9pt;
+    font-weight: 600;
+    color: var(--muted);
+    letter-spacing: 0;
+  }
+  .stepblock ul {
+    margin: 0;
+    padding-left: 17px;
+    list-style: none;
+  }
+  .stepblock li {
+    font-size: 10.5pt;
+    line-height: 1.5;
+    margin-bottom: 4px;
+    position: relative;
+  }
+  .stepblock li::before {
+    content: "•";
+    position: absolute;
+    left: -14px;
+    color: var(--accent);
+    font-weight: 800;
+  }
+  .stepblock li b { font-weight: 700; }
+  .stepblock li .path {
+    color: var(--accent-dark);
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .stepblock li em { color: var(--muted); font-style: italic; }
+
+  @media print {
+    body { background: #fff; }
+    .page {
+      margin: 0;
+      box-shadow: none;
+      width: auto;
+      min-height: 0;
+      height: 100vh;
+      padding: 0.42in 0.5in;
+    }
+    .page + .page { break-before: page; }
+  }
+
+  @page { size: Letter; margin: 0; }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════ PAGE 1 · SETUP ══════════════════ -->
+<section class="page">
+
+  <div class="masthead">
+    <div>
+      <div class="kicker">User Guide</div>
+      <div class="wordmark">Chord</div>
+    </div>
+    <div class="right">
+      Setting up<br>
+      chordapp.ai
+    </div>
+  </div>
+
+  <h1 class="lede">Getting started takes about a minute.</h1>
+  <p class="sub">
+    You sign in with Google. Everything else is optional and can be done later.
+  </p>
+
+  <div class="steps">
+
+    <div class="stepblock">
+      <div class="num">1</div>
+      <div class="body">
+        <h3>Sign up with Google</h3>
+        <ul>
+          <li>Open the Chord app, or go to <b>chordapp.ai</b>.</li>
+          <li>Tap <b>Get started</b>.</li>
+          <li>Pick your Google account.</li>
+          <li>That is the entire sign-up — there is no password to create.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="stepblock">
+      <div class="num">2</div>
+      <div class="body">
+        <h3>Give permissions</h3>
+        <ul>
+          <li>Google shows its own consent screen. Tap <b>Allow</b>.</li>
+          <li>Chord asks for two things: <b>your name and email</b>, to know who you are, and
+            <b>Google Calendar</b>, to read and add events.</li>
+          <li>Calendar access is the point — it is how the household's plans reach the calendar
+            you already check.</li>
+          <li>Chord writes only to the calendar you pick, and never touches the others.</li>
+          <li><em>Gmail is not requested here. That is a separate step.</em></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="stepblock">
+      <div class="num">3</div>
+      <div class="body">
+        <h3>Connect Gmail <span class="opt">— optional, any time</span></h3>
+        <ul>
+          <li>Go to <span class="path">Settings › Connected accounts › Google</span> and turn on
+            <b>Email</b>.</li>
+          <li>Google asks separately for Gmail access — reading mail, replying, and filing it.</li>
+          <li>This is what lets Chord find commitments buried in your mail.</li>
+          <li>Skip it and the rest of Chord still works.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="stepblock">
+      <div class="num">4</div>
+      <div class="body">
+        <h3>Add other mailboxes <span class="opt">— optional</span></h3>
+        <ul>
+          <li>All under <span class="path">Settings › Connected accounts</span>.</li>
+          <li><b>Outlook or Microsoft 365</b> — sign in with Microsoft.</li>
+          <li><b>Yahoo, AOL, or iCloud</b> — your address plus an app password from that provider.</li>
+          <li><b>Another Gmail</b> — sign in again with the second account.</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="callout">
+    <p><strong>Changing your mind is one tap:</strong> disconnect any account from
+    <strong>Settings › Connected accounts</strong>, or remove everything from
+    <strong>Settings › Account › Delete account</strong>.</p>
+  </div>
+
+  <div class="foot">
+    <span>Chord — User Guide</span>
+    <span>Page 1 of 3</span>
+  </div>
+</section>
+
+<!-- ══════════════════ PAGE 2 ══════════════════ -->
+<section class="page">
+
+  <div class="masthead">
+    <div>
+      <div class="kicker">User Guide</div>
+      <div class="wordmark">Chord</div>
+    </div>
+    <div class="right">
+      Family coordination<br>
+      chordapp.ai
+    </div>
+  </div>
+
+  <h1 class="lede">Running a household is a logistics job.</h1>
+  <p class="sub">
+    Not another chat app or another inbox — the layer between them. You decide by talking, the
+    details arrive by email, and Chord turns both into one shared calendar and one list of who
+    owes what.
+  </p>
+
+  <div class="flow">
+    <div class="box">
+      <div class="lab">Chat · where you coordinate</div>
+      <p>Who's collecting Nolan, whether Saturday works, what we still owe the school.
+      Decisions get made here.</p>
+    </div>
+    <div class="box">
+      <div class="lab">Email · where the details land</div>
+      <p>Invitations, bills, schedules, confirmations. The history and the obligations
+      already exist — buried.</p>
+    </div>
+    <div class="op">→</div>
+    <div class="box out">
+      <div class="lab">Calendar &amp; To Do's · what comes out</div>
+      <p>Chord reconciles both sides into the two things a family actually runs on: what's
+      happening, and who has to do it. Nothing is filed until someone confirms it.</p>
+    </div>
+  </div>
+
+  <h2>Getting started — three taps</h2>
+
+  <div class="row three">
+    <div class="shot">
+      <img src="assets/user-guide/00-welcome.png" style="object-position: center 60%" alt="Chord welcome screen with a Get started button">
+      <div class="cap">
+        <span class="step">STEP 1</span>
+        <h3>Sign in with Google</h3>
+        <p>Tap <span class="tap">Get started</span> and pick your Google account — that is the whole
+        sign-up. <em>Expect: Google's consent screen, then straight into the app.</em></p>
+      </div>
+    </div>
+
+    <div class="shot">
+      <img src="assets/user-guide/01-chats.png" alt="Chats tab listing family groups">
+      <div class="cap">
+        <span class="step">STEP 2</span>
+        <h3>Set up the household</h3>
+        <p>Tap <span class="tap">+ New group</span> and share the invite code, or
+        <span class="tap">Join by code</span>. One group per household is usually right; add
+        another for a trip. <em>Everyone sees the same calendar and to-dos.</em></p>
+      </div>
+    </div>
+
+    <div class="shot">
+      <img src="assets/user-guide/02-chat.png" style="object-position: center bottom" alt="Family chat where Chord files a list and answers a question about the trip">
+      <div class="cap">
+        <span class="step">STEP 3</span>
+        <h3>Coordinate out loud</h3>
+        <p>Sort things out in the group as normal. Start a line with <span class="tap">@Chord</span>
+        to make it stick — or to ask what's still open.
+        <em>Expect: a card confirming what it filed, or a straight answer.</em></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout">
+    <p><strong>The habit to build:</strong> when the family lands on something, say it to
+    <strong>@Chord</strong> in plain words — “Alice's picking up Nolan Thursday”, “soccer
+    Saturday 4pm at Lincoln Park”, “what's still unsorted for Seattle?”. It files the decision so
+    nobody has to remember it, and asking is how you find out where things stand.</p>
+  </div>
+
+  <h2>What a conversation turns into</h2>
+
+  <div class="row three compact">
+    <div class="shot">
+      <img src="assets/user-guide/04b-tasks.png" style="object-position: center 35%" alt="Tasks tab listing family to-dos with who asked and which group">
+      <div class="cap">
+        <span class="step plain">TO DO'S › TASKS</span>
+        <h3>Who owes what</h3>
+        <p>Every commitment made in chat or found in mail, merged across groups, showing who asked.</p>
+      </div>
+    </div>
+
+    <div class="shot">
+      <img src="assets/user-guide/06-lists.png" style="object-position: center 70%" alt="Lists tab showing the Costco list Chord created">
+      <div class="cap">
+        <span class="step plain">TO DO'S › LISTS</span>
+        <h3>The running lists</h3>
+        <p>Groceries, packing, school supplies — shared, so whoever gets there first can tick them off.</p>
+      </div>
+    </div>
+
+    <div class="shot">
+      <img src="assets/user-guide/05-calendar.png" style="object-position: center 22%" alt="Calendar day view with an event and a suggestion drawn from email">
+      <div class="cap">
+        <span class="step plain">CALENDAR</span>
+        <h3>The shared week</h3>
+        <p>Built from both sides — chat and mail — and written to your real Google Calendar.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="foot">
+    <span>Chord — User Guide</span>
+    <span>Page 2 of 3</span>
+  </div>
+</section>
+
+<!-- ══════════════════ PAGE 3 ══════════════════ -->
+<section class="page">
+
+  <div class="masthead">
+    <div>
+      <div class="kicker">User Guide</div>
+      <div class="wordmark">Chord</div>
+    </div>
+    <div class="right">
+      The other half of the picture<br>
+      chordapp.ai
+    </div>
+  </div>
+
+  <h1 class="lede">Half of what your family owes is sitting in your inbox.</h1>
+  <p class="sub">
+    The permission slip, the dentist confirmation, the invitation with an RSVP date. Connect
+    Gmail and Chord treats the mailbox as a source rather than a chore — it reads the history,
+    pulls out the commitments, and offers each one for confirmation. You are not being asked to
+    triage another inbox; you are being handed what it contained.
+  </p>
+
+  <h2>From mailbox to commitment</h2>
+
+  <div class="row four">
+    <div class="shot">
+      <img src="assets/user-guide/03-email.png" alt="Email tab showing a coloured attention map of categories">
+      <div class="cap">
+        <span class="step">STEP 1</span>
+        <h3>Sorted by what's owed</h3>
+        <p>Not by arrival time. Tile size tracks what still wants a response. Tap one to open that
+        category. <em>AI · Traditional · Junk switches the view.</em></p>
+      </div>
+    </div>
+
+    <div class="shot">
+      <img src="assets/user-guide/08-email-thread.png" alt="An open email thread with an extracted commitment shown above it">
+      <div class="cap">
+        <span class="step">STEP 2</span>
+        <h3>The obligation, extracted</h3>
+        <p>Chord reads the thread and states what it asks of you, right above it. Reply in place;
+        <span class="tap">Archive</span> and labels sync back to Gmail.</p>
+      </div>
+    </div>
+
+    <div class="shot">
+      <img src="assets/user-guide/04-todos.png" alt="Action Items tab listing proposed to-dos from email with confirm and reject buttons">
+      <div class="cap">
+        <span class="step">STEP 3</span>
+        <h3>You decide what counts</h3>
+        <p>Everything found collects in <span class="tap">To Do's › Action Items</span>. Tap
+        <span class="tap">✓</span> to commit it, <span class="tap">✗</span> to drop it. Nothing
+        reaches the calendar unasked.</p>
+      </div>
+    </div>
+
+    <div class="shot">
+      <img src="assets/user-guide/05b-calendar-week.png" style="object-position: center 55%" alt="Calendar week view showing the household's week">
+      <div class="cap">
+        <span class="step">RESULT</span>
+        <h3>One honest week</h3>
+        <p>What was agreed in chat and what was buried in mail end up in the same view — the
+        household's real week, on the calendar everyone already checks.</p>
+      </div>
+    </div>
+  </div>
+
+  <h2>What else it does</h2>
+
+  <ul class="ticks">
+    <li><b>Morning briefing.</b> What's on today, what's due, and the mail still owed a reply — one message, at a time you set.</li>
+    <li><b>Answers about your own household.</b> “What did Alice say about the dentist?” — it looks back so you don't have to.</li>
+    <li><b>Paperwork.</b> Drop in a school PDF or a photo of a form; Chord reads it and can answer from it later.</li>
+    <li><b>Trips.</b> Flights, stays, and who is on which leg gather in one place instead of scattering across the chat.</li>
+    <li><b>Birthdays and anniversaries.</b> Tell it once; they surface in the calendar and the briefing.</li>
+    <li><b>Relatives who won't install anything.</b> Bridge a Telegram or WhatsApp group and they take part from there.</li>
+  </ul>
+
+  <div class="callout">
+    <p><strong>Your data, plainly:</strong> Chord reads your mail and calendar to build the views
+    above — nothing else. Events are written to the calendar you choose and no other. Group
+    messages are visible to that group and the assistant, are never sold, and are not used to
+    train third-party models. Disconnect Google, leave a group, or delete your account outright
+    from <strong>Settings › Account</strong>, and your data goes with it.</p>
+  </div>
+
+  <div class="foot">
+    <span>Chord — User Guide</span>
+    <span>Page 3 of 3</span>
+  </div>
+</section>
+
+</body>
+</html>

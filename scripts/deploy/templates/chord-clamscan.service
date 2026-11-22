@@ -1,0 +1,19 @@
+# Nightly ClamAV scan (installed by deploy.sh). An on-demand scan rather than the
+# resident clamd daemon, which would hold ~1.2 GB around the clock. Uploads under
+# /var/lib/chord/data are not scanned: they are sealed (ADR 0201), so a scanner
+# sees only ciphertext.
+# A detection is a "FOUND" line in /var/log/clamav/scan.log, which the Ops Agent
+# ships and `audit.sh alert` emails on.
+[Unit]
+Description=Nightly ClamAV scan of the Chord VM
+After=clamav-freshclam.service
+
+[Service]
+Type=oneshot
+Nice=19
+IOSchedulingClass=idle
+CPUQuota=50%
+MemoryMax=1600M
+ExecStart=/usr/bin/clamscan --recursive --infected --cross-fs=no \
+  --log=/var/log/clamav/scan.log \
+  /srv/chord /home /root /tmp /var/tmp /usr/local /etc /opt

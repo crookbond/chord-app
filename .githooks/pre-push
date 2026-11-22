@@ -1,0 +1,54 @@
+#!/bin/sh
+# Lints the files a push changes and runs the typecheck, so the errors CI
+# fails on are caught before the push instead of after it. Warnings do not
+# block (CI does not fail on them either).
+#
+# Skip once with CHORD_SKIP_PREPUSH=1 git push ... (or git push --no-verify).
+# Installed by `npm install` (scripts/install-git-hooks.mjs).
+
+[ "$CHORD_SKIP_PREPUSH" = "1" ] && exit 0
+
+zero=0000000000000000000000000000000000000000
+root=$(git rev-parse --show-toplevel) || exit 1
+cd "$root" || exit 1
+
+base=$(git rev-parse --verify -q origin/main) || base=""
+
+files=$(mktemp)
+trap 'rm -f "$files"' EXIT
+
+while read -r local_ref local_sha remote_ref remote_sha; do
+  [ -z "$local_sha" ] || [ "$local_sha" = "$zero" ] && continue
+  if [ "$remote_sha" != "$zero" ] && git cat-file -e "$remote_sha" 2>/dev/null; then
+    from=$remote_sha
+  elif [ -n "$base" ]; then
+    from=$(git merge-base "$base" "$local_sha")
+  else
+    continue
+  fi
+  git diff --name-only --diff-filter=ACMR "$from" "$local_sha" >>"$files"
+done
+
+sort -u "$files" -o "$files"
+
+lintable=$(grep -E '\.(ts|tsx|mjs|js)$' "$files")
+typed=$(grep -E '\.(ts|tsx)$|(^|/)(package\.json|tsconfig[^/]*\.json)$' "$files")
+
+[ -z "$lintable" ] && [ -z "$typed" ] && exit 0
+
+if [ -n "$lintable" ]; then
+  echo "pre-push: linting $(echo "$lintable" | wc -l | tr -d ' ') changed file(s)"
+  # --no-warn-ignored: changed files the config ignores are skipped silently.
+  echo "$lintable" | tr '\n' '\0' | xargs -0 npx --no-install eslint --no-warn-ignored -- || {
+    echo "pre-push: lint errors above. Fix them, or skip once with CHORD_SKIP_PREPUSH=1." >&2
+    exit 1
+  }
+fi
+
+if [ -n "$typed" ]; then
+  echo "pre-push: typecheck"
+  npm run --silent typecheck || {
+    echo "pre-push: type errors above. Fix them, or skip once with CHORD_SKIP_PREPUSH=1." >&2
+    exit 1
+  }
+fi

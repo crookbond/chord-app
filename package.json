@@ -1,0 +1,62 @@
+{
+  "name": "chord-demo",
+  "version": "0.0.0",
+  "private": true,
+  "license": "AGPL-3.0-only",
+  "description": "Chord — mobile-first group chat with AI bot (Expo + Express demo)",
+  "engines": {
+    "node": ">=22"
+  },
+  "workspaces": [
+    "server",
+    "mobile",
+    "client"
+  ],
+  "scripts": {
+    "dev": "concurrently -n server,mobile -c blue,magenta \"npm run dev --workspace=server\" \"npm run dev --workspace=mobile\"",
+    "dev:server": "npm run dev --workspace=server",
+    "dev:mobile": "npm run dev --workspace=mobile",
+    "dev:web": "concurrently -n server,web -c blue,magenta \"npm run dev --workspace=server\" \"npm run web --workspace=mobile\"",
+    "dev:tunnel": "cloudflared tunnel run --protocol http2 chord-dev",
+    "dev:wa": "concurrently -n server,tunnel -c blue,green \"npm run dev:server\" \"npm run dev:tunnel\"",
+    "build": "npm run build --workspace=server",
+    "build:web": "cd mobile && npx expo export --platform web --output-dir web-build",
+    "lint": "eslint .",
+    "typecheck": "npm run typecheck --workspaces --if-present && tsc -p kernel/tsconfig.json --noEmit",
+    "migrate": "npm run migrate --workspace=server",
+    "demo:seed": "npm run demo:seed --workspace=server",
+    "sim:seed": "npm run sim:seed --workspace=server",
+    "sim:delete": "npm run sim:delete --workspace=server",
+    "test": "npm run test --workspace=server",
+    "test:e2e": "npm --prefix e2e install --no-audit --no-fund --silent && node e2e/run.js",
+    "verify": "npm run lint && npm run typecheck && npm run build && npm test",
+    "clean": "rm -rf server/dist mobile/.expo mobile/web-build client/dist",
+    "android": "expo run:android",
+    "ios": "expo run:ios",
+    "prepare": "node scripts/install-git-hooks.mjs"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.4",
+    "@react-native/js-polyfills": "^0.81.5",
+    "concurrently": "^9.1.0",
+    "eslint": "^9.39.4",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "globals": "^15.15.0",
+    "typescript": "^5.6.3",
+    "typescript-eslint": "^8.58.2"
+  },
+  "dependencies": {
+    "expo": "~54.0.34",
+    "expo-document-picker": "~14.0.8",
+    "react": "19.1.0",
+    "react-native": "0.81.5",
+    "react-native-screens": "~4.16.0"
+  },
+  "overrides": {
+    "postcss": "^8.5.31",
+    "xcode": {
+      "uuid": "^11.1.1"
+    }
+  }
+}

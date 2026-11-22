@@ -1,0 +1,155 @@
+{
+  "expo": {
+    "name": "Chord",
+    "slug": "chord-demo",
+    "scheme": [
+      "chord",
+      "com.googleusercontent.apps.178917388887-iuo4l866km4up04s0mhcld00hhmq0m36"
+    ],
+    "version": "1.0.0",
+    "icon": "./assets/icon.png",
+    "orientation": "portrait",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "app.chord.demo",
+      "usesAppleSignIn": true,
+      "associatedDomains": ["applinks:chordapp.ai"],
+      "infoPlist": {
+        "NSCalendarsUsageDescription": "Chord adds the events and trips it tracks to your calendar, and copies events from the calendars you choose into Chord so it can see your whole schedule and when you are busy.",
+        "NSCalendarsFullAccessUsageDescription": "Chord adds the events and trips it tracks to your calendar, and copies events from the calendars you choose into Chord so it can see your whole schedule and when you are busy.",
+        "NSRemindersUsageDescription": "Chord puts your tasks and lists in Reminders, and keeps them in sync.",
+        "NSRemindersFullAccessUsageDescription": "Chord puts your tasks and lists in Reminders, and keeps them in sync.",
+        "NSLocationWhenInUseUsageDescription": "Chord uses your approximate location, only while the app is open, to put the weather where you are into your morning briefing. It keeps a city, never a precise position.",
+        "NSContactsUsageDescription": "Chord finds which friends are already on Chord using scrambled versions of your contacts' numbers, and looks up a contact when you ask Chord about them. Only that one contact's details are sent, and your address book is never uploaded.",
+        "LSApplicationQueriesSchemes": [
+          "findmy"
+        ],
+        "ITSAppUsesNonExemptEncryption": false
+      }
+    },
+    "android": {
+      "package": "app.chord.demo",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#FFFFFF"
+      },
+      "permissions": [
+        "READ_CALENDAR",
+        "WRITE_CALENDAR",
+        "READ_CONTACTS",
+        "ACCESS_COARSE_LOCATION",
+        "CAMERA"
+      ],
+      "blockedPermissions": [
+        "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.WRITE_CONTACTS",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE"
+      ],
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          "autoVerify": true,
+          "data": [
+            {
+              "scheme": "https",
+              "host": "chordapp.ai",
+              "pathPrefix": "/join"
+            },
+            {
+              "scheme": "https",
+              "host": "chordapp.ai",
+              "pathPrefix": "/welcome"
+            },
+            {
+              "scheme": "https",
+              "host": "chordapp.ai",
+              "pathPrefix": "/nativeauth"
+            },
+            {
+              "scheme": "https",
+              "host": "chordapp.ai",
+              "pathPrefix": "/groups"
+            },
+            {
+              "scheme": "https",
+              "host": "chordapp.ai",
+              "pathPrefix": "/calendar"
+            },
+            {
+              "scheme": "https",
+              "host": "chordapp.ai",
+              "pathPrefix": "/catchup"
+            },
+            {
+              "scheme": "https",
+              "host": "chordapp.ai",
+              "pathPrefix": "/email"
+            }
+          ],
+          "category": ["BROWSABLE", "DEFAULT"]
+        }
+      ]
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "single"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-apple-authentication",
+      [
+        "expo-calendar",
+        {
+          "calendarPermission": "Chord adds the events and trips it tracks to your calendar, and copies events from the calendars you choose into Chord so it can see your whole schedule and when you are busy.",
+          "remindersPermission": "Chord puts your tasks and lists in Reminders, and keeps them in sync."
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Chord attaches the screenshots and photos you pick to your chat.",
+          "cameraPermission": "Chord uses the camera so you can shoot a photo straight into your chat.",
+          "microphonePermission": false
+        }
+      ],
+      [
+        "expo-contacts",
+        {
+          "contactsPermission": "Chord finds which friends are already on Chord using scrambled versions of your contacts' numbers, and looks up a contact when you ask Chord about them. Only that one contact's details are sent, and your address book is never uploaded."
+        }
+      ],
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/notification-icon.png",
+          "color": "#7C5CFF"
+        }
+      ],
+      [
+        "expo-secure-store",
+        {
+          "faceIDPermission": false
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "b33f8c59-0dc6-48c7-9fce-b2b7872e0ee8"
+      }
+    },
+    "owner": "crookbond",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/b33f8c59-0dc6-48c7-9fce-b2b7872e0ee8"
+    }
+  }
+}

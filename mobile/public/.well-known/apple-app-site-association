@@ -1,0 +1,40 @@
+{
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appIDs": ["5YLAQB2ZQZ.app.chord.demo"],
+        "components": [
+          {
+            "/": "/join/*",
+            "comment": "Group invite links open the Chord app"
+          },
+          {
+            "/": "/welcome/*",
+            "comment": "Welcome-DM signup/referrer links open the Chord app (ADR 0053)"
+          },
+          {
+            "/": "/groups/*",
+            "comment": "Read-more links on truncated WhatsApp/Telegram sends open the chat in-app"
+          },
+          {
+            "/": "/calendar",
+            "comment": "Briefing-template links open the calendar in-app (ADR 0091)"
+          },
+          {
+            "/": "/catchup/*",
+            "comment": "Briefing-template links open the To Do's hub in-app (ADR 0091)"
+          },
+          {
+            "/": "/email",
+            "comment": "Briefing-template links open the email reader in-app (ADR 0091)"
+          },
+          {
+            "/": "/email/*",
+            "comment": "Briefing-template links open an email thread in-app (ADR 0091)"
+          }
+        ]
+      }
+    ]
+  }
+}

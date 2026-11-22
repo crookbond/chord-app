@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Chord email — screen mockups</title>
+<style>
+  :root{
+    --tp:#2C2C2A; --ts:#5F5E5A; --tm:#888780;
+    --bd:#E3E1D9; --bs:#C9C6BC;
+    --w:#FFFFFF; --s1:#F5F3EC;
+    --acT:#185FA5; --acB:#E6F1FB; --acBd:#85B7EB; --acF:#378ADD;
+    --dgT:#A32D2D; --dgBd:#F09595;
+    --wnT:#854F0B; --wnB:#FAEEDA;
+    --okT:#3B6D11;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#fff;font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+       color:var(--tp);padding:24px;display:flex;flex-wrap:wrap;gap:28px;align-items:flex-start}
+  .panel{width:360px;background:#FBFAF6;border:1px solid var(--bd);border-radius:16px;
+         overflow:hidden;display:flex;flex-direction:column}
+  .seg{display:flex;gap:3px;margin:10px 11px 0;background:var(--s1);border-radius:8px;padding:3px}
+  .seg span{flex:1;text-align:center;font-size:12.5px;padding:6px 0;border-radius:6px;color:var(--ts)}
+  .seg .act{background:var(--w);color:var(--tp);font-weight:500}
+  .body{padding:11px;display:flex;flex-direction:column;gap:9px;flex:1}
+  .card{background:var(--w);border:1px solid var(--bd);border-radius:11px;padding:10px 12px}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .tile{background:var(--w);border:1px solid var(--bd);border-radius:11px;padding:9px 10px;min-height:64px}
+  .tileHd{display:flex;justify-content:space-between;align-items:center;gap:5px;margin-bottom:4px}
+  .nm{font-size:13px;font-weight:500}
+  .badge{font-size:11px;background:var(--acF);color:#fff;border-radius:9px;padding:1px 7px}
+  .ln{font-size:11.5px;color:var(--ts);line-height:1.45}
+  .warn{color:var(--wnT)}
+  .lbl{font-size:11px;color:var(--tm)}
+  .h1{font-size:14px;font-weight:500}
+  .h2{font-size:12px;color:var(--ts);line-height:1.45}
+  .btn{font-size:12px;padding:4px 11px;border:1px solid var(--bs);border-radius:8px;
+       background:transparent;color:var(--tp);display:inline-block}
+  .btnA{border-color:var(--acBd);color:var(--acT)}
+  .row{display:flex;gap:6px;margin-top:8px}
+  .chip{font-size:11px;background:var(--acB);color:var(--acT);padding:2px 8px;border-radius:8px;display:inline-block}
+  .foot{padding:9px 13px;border-top:1px solid var(--bd)}
+  .tabs{display:flex;border-top:1px solid var(--bd);padding:9px 0 10px}
+  .tabs span{flex:1;text-align:center;font-size:11px;color:var(--tm)}
+  .tabs .act{color:var(--acT);font-weight:500}
+  .mrow{display:flex;gap:10px;padding:9px 2px;border-bottom:1px solid var(--bd)}
+  .mrow:last-child{border-bottom:none}
+  .av{width:29px;height:29px;border-radius:50%;background:var(--s1);color:var(--ts);
+      font-size:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .avA{background:var(--acB);color:var(--acT)}
+  .mtop{display:flex;justify-content:space-between;gap:6px}
+  .frow{display:flex;align-items:center;gap:10px;padding:10px 2px;border-bottom:1px solid var(--bd)}
+  .frow:last-child{border-bottom:none}
+  .fnm{font-size:13px;flex:1}
+  .sheet{background:var(--w);border-top:1px solid var(--bs);border-radius:14px 14px 0 0;padding:10px 13px 6px}
+  .grab{width:34px;height:3px;background:var(--bs);border-radius:2px;margin:0 auto 10px}
+  .hdr{padding:12px 13px 10px;border-bottom:1px solid var(--bd);display:flex;align-items:center;gap:7px}
+  .cap{width:360px;font-size:12px;color:var(--ts);text-align:center;margin-top:9px}
+  .wrap{display:flex;flex-direction:column;align-items:center}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+<div class="panel" id="p1">
+  <div class="seg"><span class="act">AI</span><span>Traditional</span></div>
+  <div class="body">
+    <div class="card" style="border-color:var(--dgBd)">
+      <p class="lbl" style="color:var(--dgT)">NEEDS YOU TODAY</p>
+      <p class="h1" style="margin:4px 0 0">Pay $240 to Dr. Chen — due Aug 3</p>
+      <div class="row"><span class="btn btnA">Confirm</span><span class="btn">Not now</span></div>
+    </div>
+    <div class="grid">
+      <div class="tile"><div class="tileHd"><span class="nm">School</span><span class="badge">3</span></div><p class="ln">Aug 9 slip due</p><p class="ln">Aug 12 pictures</p></div>
+      <div class="tile"><div class="tileHd"><span class="nm">Finance</span><span class="badge">2</span></div><p class="ln">$1,240 in 14d</p><p class="ln warn">autopay failed</p></div>
+      <div class="tile"><div class="tileHd"><span class="nm">In flight</span><span class="badge">1</span></div><p class="ln">UA 512 on time</p><p class="ln warn">lens delayed</p></div>
+      <div class="tile"><div class="tileHd"><span class="nm">Family</span></div><p class="ln">nothing owed</p></div>
+      <div class="tile"><div class="tileHd"><span class="nm">Reading</span></div><p class="ln">3 this week</p></div>
+      <div class="tile" style="background:var(--s1);border-color:transparent"><div class="tileHd"><span class="nm" style="color:var(--tm)">Promotions</span><span class="ln">312</span></div></div>
+    </div>
+  </div>
+  <div class="foot"><p class="lbl">14 handled today &middot; 2 I couldn't read</p></div>
+  <div class="tabs"><span class="act">Email</span><span>Chats</span><span>To Do's</span><span>Calendar</span><span>Settings</span></div>
+</div>
+<p class="cap">Email &middot; AI — one urgent strip, then the tiles</p>
+</div>
+
+<div class="wrap">
+<div class="panel" id="p2">
+  <div class="seg"><span class="act">AI</span><span>Traditional</span></div>
+  <div class="body">
+    <p class="h2" style="color:var(--okT);font-weight:500">&#10003; Nothing owed</p>
+    <div class="grid">
+      <div class="tile"><div class="tileHd"><span class="nm">School</span></div><p class="ln">Sep 2 first day</p></div>
+      <div class="tile"><div class="tileHd"><span class="nm">Finance</span></div><p class="ln">$0 due</p></div>
+      <div class="tile"><div class="tileHd"><span class="nm">In flight</span></div><p class="ln">UA 512 on time</p></div>
+      <div class="tile"><div class="tileHd"><span class="nm">Family</span></div><p class="ln">nothing owed</p></div>
+      <div class="tile"><div class="tileHd"><span class="nm">Reading</span></div><p class="ln">3 this week</p></div>
+      <div class="tile" style="background:var(--s1);border-color:transparent"><div class="tileHd"><span class="nm" style="color:var(--tm)">Promotions</span><span class="ln">312</span></div></div>
+    </div>
+    <div class="card" style="background:var(--s1);border-color:transparent">
+      <p class="h1" style="font-weight:400">Ridgeline 10K closes Friday</p>
+      <p class="h2" style="margin-top:2px">You ran it in 2024 and 2025</p>
+    </div>
+  </div>
+  <div class="foot"><p class="lbl">14 handled today &middot; 2 I couldn't read</p></div>
+  <div class="tabs"><span class="act">Email</span><span>Chats</span><span>To Do's</span><span>Calendar</span><span>Settings</span></div>
+</div>
+<p class="cap">Most days — no badge anywhere is the zero state</p>
+</div>
+
+<div class="wrap">
+<div class="panel" id="p3">
+  <div class="hdr"><span style="font-size:15px;color:var(--tm)">&#8249;</span><span style="font-size:16px;font-weight:500">School</span><span class="badge" style="margin-left:auto">3</span></div>
+  <div class="body">
+    <div class="card">
+      <span class="chip">&rarr; Family</span>
+      <p class="h1" style="margin:6px 0 3px">3 dates from the newsletter</p>
+      <p class="h2">Aug 9 slip &middot; Aug 12 pictures &middot; Aug 15 early dismissal</p>
+      <div class="row"><span class="btn btnA">Add all</span><span class="btn">Review</span></div>
+    </div>
+    <div class="card">
+      <p class="lbl">NEED ONE ANSWER</p>
+      <p class="h1" style="margin:4px 0 0">"Practice moved to 5" — whose?</p>
+      <div class="row"><span class="btn">Maya</span><span class="btn">Ben</span><span class="btn">Both</span></div>
+    </div>
+    <div style="border-top:1px solid var(--bd);padding-top:9px">
+      <p class="lbl" style="margin-bottom:5px">Current state</p>
+      <p class="h2">Sep 2 — first day</p>
+      <p class="h2">Tuition paid through Dec</p>
+    </div>
+    <p class="lbl">14 emails &middot; sources</p>
+  </div>
+  <div class="tabs"><span class="act">Email</span><span>Chats</span><span>To Do's</span><span>Calendar</span><span>Settings</span></div>
+</div>
+<p class="cap">A tile, tapped — decisions batched, state beneath, sources last</p>
+</div>
+
+<div class="wrap">
+<div class="panel" id="p4">
+  <div class="seg"><span>AI</span><span class="act">Traditional</span></div>
+  <div class="body">
+    <div class="mrow"><div class="av avA">BP</div><div style="flex:1;min-width:0"><div class="mtop"><span class="h1">Bay Pediatrics</span><span class="lbl">9:14</span></div><p class="h2" style="color:var(--tp)">Statement for July</p><p class="h2">Balance due $240.00, payable by&hellip;</p></div></div>
+    <div class="mrow"><div class="av">MA</div><div style="flex:1;min-width:0"><div class="mtop"><span class="h1" style="font-weight:400">Ms. Alvarez</span><span class="lbl">Mon</span></div><p class="h2">Recital details</p><p class="h2">Recital begins promptly at 3pm&hellip;</p></div></div>
+    <div class="mrow"><div class="av">UA</div><div style="flex:1;min-width:0"><div class="mtop"><span class="h1" style="font-weight:400">United</span><span class="lbl">Mon</span></div><p class="h2">Check-in open — UA 512</p><p class="h2">Your flight departs SFO 06:40&hellip;</p></div></div>
+    <div class="mrow"><div class="av">RE</div><div style="flex:1;min-width:0"><div class="mtop"><span class="h1" style="font-weight:400">Coach Reyes</span><span class="lbl">Sun</span></div><p class="h2">Practice change</p><p class="h2">Practice moved to 5 this week</p></div></div>
+    <div class="mrow"><div class="av">VG</div><div style="flex:1;min-width:0"><div class="mtop"><span class="h1" style="font-weight:400">Vanguard</span><span class="lbl">Sat</span></div><p class="h2">Q3 letter to shareholders</p></div></div>
+  </div>
+  <div class="tabs"><span class="act">Email</span><span>Chats</span><span>To Do's</span><span>Calendar</span><span>Settings</span></div>
+</div>
+<p class="cap">Traditional — the complete mailbox, opens on the inbox</p>
+</div>
+
+<div class="wrap">
+<div class="panel" id="p5">
+  <div class="seg" style="opacity:.35"><span>AI</span><span class="act">Traditional</span></div>
+  <div class="body" style="opacity:.3">
+    <div class="mrow"><div class="av">BP</div><div style="flex:1"><span class="h1">Bay Pediatrics</span><p class="h2">Statement for July</p></div></div>
+    <div class="mrow"><div class="av">MA</div><div style="flex:1"><span class="h1" style="font-weight:400">Ms. Alvarez</span><p class="h2">Recital details</p></div></div>
+  </div>
+  <div class="sheet">
+    <div class="grab"></div>
+    <div class="frow"><span class="fnm" style="font-weight:500">Inbox</span><span class="lbl">4</span></div>
+    <div class="frow"><span class="fnm">Sent</span></div>
+    <div class="frow"><span class="fnm">Drafts</span><span class="lbl">1</span></div>
+    <div class="frow"><span class="fnm">Archive</span></div>
+    <div class="frow"><span class="fnm">Junk</span><span class="lbl">312</span></div>
+    <div class="frow"><span class="fnm">Trash</span></div>
+    <div class="frow"><span class="fnm">Labels</span><span class="lbl">&rsaquo;</span></div>
+  </div>
+  <div class="tabs"><span class="act" style="background:var(--acB);border-radius:8px">Email</span><span style="opacity:.45">Chats</span><span style="opacity:.45">To Do's</span><span style="opacity:.45">Calendar</span><span style="opacity:.45">Settings</span></div>
+</div>
+<p class="cap">Long-press Email — every folder, junk among them</p>
+</div>
+
+<div class="wrap">
+<div id="p6" style="width:660px;background:#fff;padding:8px">
+<svg viewBox="0 0 660 460" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto">
+<defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#888780"/></marker></defs>
+<g font-family="-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif">
+<rect x="245" y="12" width="170" height="36" rx="4" fill="#F1EFE8" stroke="#888780"/>
+<text x="330" y="35" text-anchor="middle" font-size="13" fill="#2C2C2A">Mail arrives</text>
+<line x1="330" y1="48" x2="330" y2="66" stroke="#888780" stroke-width="1.5" marker-end="url(#ar)"/>
+<rect x="215" y="68" width="230" height="36" rx="4" fill="#F1EFE8" stroke="#888780"/>
+<text x="330" y="91" text-anchor="middle" font-size="13" fill="#2C2C2A">Deterministic route</text>
+<line x1="445" y1="86" x2="480" y2="86" stroke="#888780" stroke-width="1.5" marker-end="url(#ar)"/>
+<text x="487" y="82" font-size="11" fill="#5F5E5A">dead letter</text>
+<text x="487" y="95" font-size="11" fill="#5F5E5A">template &middot; invite</text>
+<line x1="330" y1="104" x2="330" y2="118" stroke="#888780" stroke-width="1.5"/>
+<line x1="175" y1="118" x2="485" y2="118" stroke="#888780" stroke-width="1.5"/>
+<line x1="175" y1="118" x2="175" y2="136" stroke="#888780" stroke-width="1.5" marker-end="url(#ar)"/>
+<line x1="485" y1="118" x2="485" y2="136" stroke="#888780" stroke-width="1.5" marker-end="url(#ar)"/>
+<rect x="70" y="138" width="210" height="52" rx="4" fill="#F1EFE8" stroke="#888780"/>
+<text x="175" y="159" text-anchor="middle" font-size="13" font-weight="500" fill="#2C2C2A">Classifier</text>
+<text x="175" y="177" text-anchor="middle" font-size="11" fill="#5F5E5A">which tile</text>
+<rect x="380" y="138" width="210" height="52" rx="4" fill="#F1EFE8" stroke="#888780"/>
+<text x="485" y="159" text-anchor="middle" font-size="13" font-weight="500" fill="#2C2C2A">Extractor</text>
+<text x="485" y="177" text-anchor="middle" font-size="11" fill="#5F5E5A">facts + decisions</text>
+<line x1="175" y1="190" x2="175" y2="212" stroke="#888780" stroke-width="1.5"/>
+<line x1="485" y1="190" x2="485" y2="212" stroke="#888780" stroke-width="1.5"/>
+<line x1="175" y1="212" x2="485" y2="212" stroke="#888780" stroke-width="1.5"/>
+<line x1="330" y1="212" x2="330" y2="234" stroke="#888780" stroke-width="1.5" marker-end="url(#ar)"/>
+<rect x="185" y="236" width="290" height="56" rx="4" fill="#E1F5EE" stroke="#0F6E56"/>
+<text x="330" y="258" text-anchor="middle" font-size="14" font-weight="500" fill="#04342C">Tile</text>
+<text x="330" y="277" text-anchor="middle" font-size="11" fill="#0F6E56">renders the facts &middot; badges the decisions</text>
+<line x1="255" y1="292" x2="255" y2="310" stroke="#888780" stroke-width="1.5"/>
+<line x1="255" y1="310" x2="150" y2="310" stroke="#888780" stroke-width="1.5"/>
+<line x1="150" y1="310" x2="150" y2="330" stroke="#888780" stroke-width="1.5" marker-end="url(#ar)"/>
+<line x1="405" y1="292" x2="405" y2="310" stroke="#888780" stroke-width="1.5"/>
+<line x1="405" y1="310" x2="470" y2="310" stroke="#888780" stroke-width="1.5"/>
+<line x1="470" y1="310" x2="470" y2="330" stroke="#888780" stroke-width="1.5" marker-end="url(#ar)"/>
+<rect x="40" y="332" width="220" height="52" rx="4" fill="#E1F5EE" stroke="#0F6E56"/>
+<text x="150" y="353" text-anchor="middle" font-size="13" font-weight="500" fill="#04342C">Urgent strip</text>
+<text x="150" y="371" text-anchor="middle" font-size="11" fill="#0F6E56">top-ranked, cross-domain</text>
+<rect x="365" y="332" width="210" height="52" rx="4" fill="#E1F5EE" stroke="#0F6E56"/>
+<text x="470" y="353" text-anchor="middle" font-size="13" font-weight="500" fill="#04342C">Tap &rarr; decide</text>
+<text x="470" y="371" text-anchor="middle" font-size="11" fill="#0F6E56">confirm &middot; edit &middot; ask</text>
+<line x1="470" y1="384" x2="470" y2="404" stroke="#888780" stroke-width="1.5" marker-end="url(#ar)"/>
+<rect x="330" y="406" width="280" height="36" rx="4" fill="#E1F5EE" stroke="#0F6E56"/>
+<text x="470" y="429" text-anchor="middle" font-size="13" fill="#04342C">To Do's &middot; Calendar &middot; Chat</text>
+<line x1="150" y1="384" x2="150" y2="424" stroke="#888780" stroke-width="1.5" stroke-dasharray="3 3"/>
+<text x="160" y="428" font-size="11" fill="#5F5E5A">same decisions, hoisted</text>
+<text x="40" y="18" font-size="11" fill="#888780">grey = machine &middot; teal = on screen</text>
+</g>
+</svg>
+</div>
+<p class="cap" style="width:660px">Flow — the tile is where both passes meet</p>
+</div>
+
+</body>
+</html>

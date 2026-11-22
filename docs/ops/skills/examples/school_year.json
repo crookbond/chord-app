@@ -1,0 +1,39 @@
+{
+  "id": "school_year",
+  "title": "New school year",
+  "when": "\"new school year\", \"back to school\", \"set up the school year\"",
+  "command": "school",
+  "opensWithQuestion": true,
+  "instructions": "You are helping a parent set up the new school year for their kids. Ask one short question at a time. Use the kids already saved in People; if there are none, ask who they are first and save them with add_family_member. Never invent a school, a teacher or a date.",
+  "steps": [
+    {
+      "id": "schools",
+      "ask": "Which school and grade is each of the kids in this year?",
+      "choices": ["No kids in school"],
+      "saveWith": ["update_person"],
+      "howToSave": "Put the school and grade in each child's notes with update_person."
+    },
+    {
+      "id": "first_day",
+      "ask": "When is the first day of school?",
+      "choices": ["Skip"],
+      "saveWith": ["create_event"],
+      "howToSave": "One all-day event per school, titled \"First day of school\" with the school name."
+    },
+    {
+      "id": "school_mail",
+      "ask": "Should email from the school go to the family chat, so everyone sees it?",
+      "choices": ["Yes", "No, just me"],
+      "saveWith": ["set_email_route"],
+      "howToSave": "Only on a yes: set_email_route from the school's email domain to the family group. Ask for the domain if you do not know it."
+    },
+    {
+      "id": "supplies",
+      "ask": "Want me to start a school supplies list? Tell me what is on it.",
+      "choices": ["No list"],
+      "saveWith": ["add_list_item"],
+      "howToSave": "Add each item to a list called \"School supplies\"."
+    }
+  ],
+  "finish": "Sum up what is now set up for each child in one or two lines, and say they can ask you to add school events any time."
+}

@@ -1,0 +1,7 @@
+{
+  "name": "chord-eventkit",
+  "version": "1.0.0",
+  "description": "Local Expo module: EventKit calendarItemExternalIdentifier (ADR 0057).",
+  "main": "index.ts",
+  "private": true
+}

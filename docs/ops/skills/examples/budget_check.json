@@ -1,0 +1,26 @@
+{
+  "id": "budget_check",
+  "title": "Monthly budget check",
+  "when": "\"help me with my budget\", \"budget check\", \"what am I spending on\"",
+  "command": "budget",
+  "opensWithQuestion": false,
+  "instructions": "You are helping the user look at their monthly spending. First call query_receipts with recurring: true to see what they pay for every month, and say in two or three lines what you found (totals per currency, never added across currencies; say it is only from the receipts Chord has). Then ask the current question below. Ask one short question at a time.",
+  "steps": [
+    {
+      "id": "cancel",
+      "ask": "Is there anything here you no longer use and want to cancel?",
+      "choices": ["Keep everything"],
+      "saveWith": ["create_task"],
+      "howToSave": "One create_task per thing to cancel, titled \"Cancel <name>\"."
+    },
+    {
+      "id": "goal",
+      "ask": "Are you saving for anything at the moment?",
+      "choices": ["Nothing yet"],
+      "saveWith": ["remember_fact"],
+      "howToSave": "Save it with remember_fact, key \"savings_goal\".",
+      "known": "has_fact:savings_goal"
+    }
+  ],
+  "finish": "Sum up in two lines: what they pay for each month and what they decided to change."
+}

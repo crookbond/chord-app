@@ -1,0 +1,13 @@
+{
+  "name": "@chord/e2e",
+  "version": "0.0.0",
+  "private": true,
+  "license": "AGPL-3.0-only",
+  "description": "End-to-end browser tests for the Chord web app. Drives the locally-installed Chrome via playwright-core (no bundled browser download).",
+  "scripts": {
+    "test": "node run.js"
+  },
+  "devDependencies": {
+    "playwright-core": "^1.61.0"
+  }
+}

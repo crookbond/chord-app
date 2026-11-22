@@ -1,0 +1,57 @@
+<svg viewBox="0 0 820 470" xmlns="http://www.w3.org/2000/svg" font-family="'Segoe UI', system-ui, sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">WhatsApp thread is bound to the Personal group only</title>
+  <desc id="d">A WhatsApp 1x1 thread binds solidly to the user's Personal group, which is the bot's only scope. A red, crossed-out, rejected path shows that targeting other shared groups (Family, Soccer, Work) directly from the thread is disallowed as a leak surface. Shared groups are reached only through the Chord app.</desc>
+
+  <rect x="0" y="0" width="820" height="470" fill="#ffffff"/>
+
+  <text x="32" y="40" font-size="19" font-weight="700" fill="#1f2937">WhatsApp 1×1 thread → bound to the Personal group only</text>
+  <text x="32" y="64" font-size="13" fill="#6b7280">No cross-group targeting from the thread — a round-tripped group id is a leak surface (ADR 0004 / 0032).</text>
+
+  <!-- WhatsApp thread -->
+  <rect x="40" y="150" width="186" height="86" rx="12" fill="#f9fafb" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="133" y="186" font-size="14" font-weight="600" fill="#1f2937" text-anchor="middle">📱 WhatsApp 1×1 thread</text>
+  <text x="133" y="207" font-size="11.5" fill="#6b7280" text-anchor="middle">one number · one user</text>
+
+  <!-- allowed arrow -->
+  <line x1="226" y1="193" x2="296" y2="193" stroke="#15803d" stroke-width="2.5" marker-end="url(#ag)"/>
+  <text x="261" y="183" font-size="12" font-weight="700" fill="#15803d" text-anchor="middle">bind ✓</text>
+
+  <!-- Personal group -->
+  <rect x="300" y="150" width="190" height="86" rx="12" fill="#dcfce7" stroke="#15803d" stroke-width="1.75"/>
+  <text x="395" y="184" font-size="14" font-weight="700" fill="#14532d" text-anchor="middle">Personal group</text>
+  <text x="395" y="205" font-size="11.5" fill="#166534" text-anchor="middle">bot scope = personal (auto-bind)</text>
+
+  <!-- other groups container -->
+  <rect x="598" y="74" width="192" height="212" rx="12" fill="none" stroke="#9ca3af" stroke-width="1.5" stroke-dasharray="6 5"/>
+  <text x="694" y="96" font-size="12" font-weight="600" fill="#6b7280" text-anchor="middle">Other groups (shared)</text>
+  <g font-size="13" fill="#374151" text-anchor="middle">
+    <rect x="618" y="108" width="152" height="40" rx="8" fill="#f9fafb" stroke="#d1d5db"/>
+    <text x="694" y="133">Family</text>
+    <rect x="618" y="156" width="152" height="40" rx="8" fill="#f9fafb" stroke="#d1d5db"/>
+    <text x="694" y="181">Soccer</text>
+    <rect x="618" y="204" width="152" height="40" rx="8" fill="#f9fafb" stroke="#d1d5db"/>
+    <text x="694" y="229">Work</text>
+  </g>
+
+  <!-- Chord app -->
+  <rect x="598" y="352" width="192" height="72" rx="12" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5"/>
+  <text x="694" y="384" font-size="14" font-weight="600" fill="#1e3a8a" text-anchor="middle">📱 Chord app</text>
+  <text x="694" y="405" font-size="11.5" fill="#1d4ed8" text-anchor="middle">the surface for shared groups</text>
+
+  <!-- app -> shared groups -->
+  <line x1="694" y1="352" x2="694" y2="290" stroke="#9ca3af" stroke-width="2" marker-end="url(#an)"/>
+  <text x="706" y="324" font-size="11" fill="#6b7280">managed here</text>
+
+  <!-- rejected leak bridge -->
+  <path d="M226,162 C 380,86 470,104 594,150" fill="none" stroke="#dc2626" stroke-width="2.5" stroke-dasharray="7 5" marker-end="url(#ar)"/>
+  <circle cx="410" cy="106" r="15" fill="#fee2e2" stroke="#dc2626" stroke-width="2"/>
+  <line x1="402" y1="98" x2="418" y2="114" stroke="#dc2626" stroke-width="2.5"/>
+  <line x1="418" y1="98" x2="402" y2="114" stroke="#dc2626" stroke-width="2.5"/>
+  <text x="410" y="142" font-size="12.5" font-weight="700" fill="#dc2626" text-anchor="middle">leak surface — rejected</text>
+
+  <defs>
+    <marker id="ag" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#15803d"/></marker>
+    <marker id="an" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#9ca3af"/></marker>
+    <marker id="ar" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#dc2626"/></marker>
+  </defs>
+</svg>

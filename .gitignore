@@ -1,0 +1,69 @@
+node_modules/
+dist/
+build/
+.expo/
+.expo-shared/
+.expo-web-test/
+web-build/
+coverage/
+
+/data
+/logs
+
+# Stray EAS-generated stub created when `eas` runs from the repo root.
+# The real Expo config is mobile/app.json — anchored so this only ignores
+# the root copy.
+/app.json
+
+.env
+.env.local
+.env.*.local
+scripts/deploy/deploy.env
+scripts/deploy/.env.prod
+# Google Play upload key for `eas submit` (mobile/eas.json).
+mobile/play-service-account.json
+
+*.log
+*.tsbuildinfo
+
+.DS_Store
+.vscode/
+.idea/
+
+# Office source files for docs/references/ — we commit the markdown
+# rewrites (chord-*.md) and keep the originals local only.
+*.docx
+*.pptx
+*.xlsx
+
+# Personal dev scratch sheet — kept local only.
+commands.txt
+
+# ADR 0091 - downloaded GeoLite2 database (~60MB, refreshed by deploy.sh)
+scripts/deploy/.geolite2-city.mmdb
+logs-load/
+data-load/
+
+# Demo and marketing videos, wherever they are saved, and the scripts that cut
+# them. Kept out of the repo and off the server (deploy.sh excludes the same
+# set) until we decide to host them on the website.
+*.[mM][pP]4
+*.[mM][oO][vV]
+*.[mM]4[vV]
+*.[wW][eE][bB][mM]
+*.[mM][kK][vV]
+*.[aA][vV][iI]
+*.[wW][mM][vV]
+/marketing-video/
+/marketing-videos/
+# The website's own demo video (docs/ops/website.md) is part of the site.
+!/mobile/public/site/video/*.mp4
+
+# Claude Code worktrees — each is a full checkout of this repo. They were
+# excluded only in .git/info/exclude, which git honours but EAS CLI does not
+# read, so `eas build` descended into every one of them while packing the
+# upload. That both bloated the tarball and raced a session removing its own
+# worktree (ENOENT on lstat, build aborted). Listing them here is the form
+# EAS respects. Not .easignore: that file REPLACES .gitignore for EAS, so a
+# minimal one would start shipping node_modules.
+.claude/worktrees/

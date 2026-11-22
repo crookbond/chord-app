@@ -1,0 +1,247 @@
+name: ci
+
+# Actions minutes cost money on a private repo, so this only runs when it can find something:
+#  - paths-ignore: a change that touches nothing but docs and the deploy tooling cannot break
+#    the app or the tests. scripts/deploy/vm/** is deliberately NOT ignored: a server test
+#    imports it. example.env is not ignored either: CI copies it to .env.
+#    (GitHub applies paths-ignore only when EVERY changed file matches; a mixed change still runs.
+#    There is no required-check protection on this repo, so a skipped run blocks nothing.)
+#  - concurrency: a newer push to the same branch or PR cancels the run it supersedes.
+#  - drafts: a draft PR is not run until it is marked ready.
+#  - tests (ADR 0265): lint, typecheck and build always run. The server tests run only
+#    for what the change touches (server/scripts/ci/select-tests.mjs: tests named after a
+#    changed file, else the ones next to it, plus the two codebase-scan guards). The WHOLE
+#    suite runs when asked: the `full-ci` label on a PR, or "Run workflow" on the Actions
+#    tab. A change to something every test reads (lockfile, vitest config, test helpers,
+#    example.env, this file) also runs the whole suite.
+#  - jobs: checks (lint/typecheck/build) and the tests run side by side. The tests (the
+#    whole suite, or a picked subset) are split over up to MAX_SHARDS runners by how long
+#    each file took on main's last run (server/scripts/ci/test-shards.mjs); a small subset
+#    stays on one. The `timings` job saves the new times after each main run.
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - 'docs/**'
+      - '**/*.md'
+      - 'scripts/deploy/*.sh'
+      - 'scripts/deploy/*.txt'
+      - 'scripts/deploy/*.example'
+      - 'scripts/deploy/templates/**'
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review, labeled]
+    paths-ignore:
+      - 'docs/**'
+      - '**/*.md'
+      - 'scripts/deploy/*.sh'
+      - 'scripts/deploy/*.txt'
+      - 'scripts/deploy/*.example'
+      - 'scripts/deploy/templates/**'
+  workflow_dispatch:
+
+concurrency:
+  # Adding any other label must not cancel the run in progress, so it gets a group of its own.
+  group: ci-${{ github.event.pull_request.number || github.ref }}${{ github.event.action == 'labeled' && github.event.label.name != 'full-ci' && format('-label-{0}', github.run_id) || '' }}
+  cancel-in-progress: true
+
+jobs:
+  checks:
+    if: >-
+      (github.event_name != 'pull_request' || github.event.pull_request.draft == false) &&
+      (github.event.action != 'labeled' || github.event.label.name == 'full-ci')
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+      # The installed tree, keyed on the lockfile and Node version (native modules such as
+      # sharp and esbuild are built for that Node). A hit skips npm ci entirely; the npm
+      # download cache above only spares the downloads on a miss.
+      - id: node-modules
+        uses: actions/cache@v4
+        with:
+          path: |
+            node_modules
+            */node_modules
+          key: node-modules-${{ runner.os }}-${{ hashFiles('.nvmrc') }}-${{ hashFiles('package-lock.json') }}
+      - if: steps.node-modules.outputs.cache-hit != 'true'
+        run: npm ci
+      - run: cp example.env .env
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm run build
+
+  pick:
+    if: >-
+      (github.event_name != 'pull_request' || github.event.pull_request.draft == false) &&
+      (github.event.action != 'labeled' || github.event.label.name == 'full-ci')
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      shards: ${{ steps.pick.outputs.shards }}
+      count: ${{ steps.pick.outputs.count }}
+      plan: ${{ steps.pick.outputs.plan }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # The test picker diffs against the base branch.
+          fetch-depth: 0
+      # How long each test file took on main's last run (saved by the `timings` job).
+      # A PR can read main's caches. No hit = every file weighed the same.
+      - uses: actions/cache/restore@v4
+        with:
+          path: .ci-timings/test-timings.json
+          key: test-timings-${{ github.run_id }}
+          restore-keys: test-timings-
+      # select-tests.mjs uses only node builtins, so no npm ci here.
+      - name: Pick tests
+        id: pick
+        env:
+          EVENT: ${{ github.event_name }}
+          FULL_LABEL: ${{ contains(github.event.pull_request.labels.*.name, 'full-ci') }}
+          BASE_REF: ${{ github.base_ref }}
+          BEFORE: ${{ github.event.before }}
+          # The most runners one run may use. A picked subset gets fewer when it is small.
+          MAX_SHARDS: 4
+        run: |
+          if [ "$EVENT" = "workflow_dispatch" ] || [ "$FULL_LABEL" = "true" ]; then
+            echo "Whole suite: asked for."
+            echo "ALL" > tests.txt
+          else
+            if [ "$EVENT" = "pull_request" ]; then
+              BASE=$(git merge-base "origin/$BASE_REF" HEAD)
+            elif [ -n "$BEFORE" ] && ! echo "$BEFORE" | grep -qE '^0+$'; then
+              BASE="$BEFORE"
+            fi
+            if [ -z "$BASE" ]; then
+              echo "No base to compare with: whole suite."
+              echo "ALL" > tests.txt
+            else
+              node server/scripts/ci/select-tests.mjs "$BASE" > tests.txt
+            fi
+          fi
+          echo "Tests to run:"; cat tests.txt
+          # Spread over runners by recorded time (whole suite AND a large picked subset).
+          node server/scripts/ci/test-shards.mjs plan tests.txt .ci-timings/test-timings.json "$MAX_SHARDS" > plan.json
+          COUNT=$(node -e 'console.log(JSON.parse(require("fs").readFileSync("plan.json","utf8")).count)')
+          echo "count=$COUNT" >> "$GITHUB_OUTPUT"
+          echo "shards=$(seq -s, -f '"%g"' 1 "$COUNT" | sed 's/^/[/; s/$/]/')" >> "$GITHUB_OUTPUT"
+          echo "plan=$(node -e 'console.log(JSON.stringify(JSON.parse(require("fs").readFileSync("plan.json","utf8")).plan))')" >> "$GITHUB_OUTPUT"
+
+  test:
+    needs: pick
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: ${{ fromJson(needs.pick.outputs.shards) }}
+    name: test (${{ matrix.shard }}/${{ needs.pick.outputs.count }})
+    # The server test suite needs a real Postgres: vitest globalSetup builds a
+    # `chord_test_template` and each test clones it via CREATE DATABASE … TEMPLATE
+    # (see server/src/__test-helpers__/db.ts). The `chord` role is the image's
+    # superuser, so it can create/drop the per-test databases.
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: chord
+          POSTGRES_PASSWORD: chord
+          POSTGRES_DB: chord_test
+        ports:
+          - 5432:5432
+        # The job waits for the first healthy probe; Postgres is up in ~2s, so
+        # a 10s interval cost ~10s per runner.
+        options: >-
+          --health-cmd "pg_isready -U chord"
+          --health-interval 2s
+          --health-timeout 5s
+          --health-retries 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+      # Same key as the checks job, so the two share one saved tree.
+      - id: node-modules
+        uses: actions/cache@v4
+        with:
+          path: |
+            node_modules
+            */node_modules
+          key: node-modules-${{ runner.os }}-${{ hashFiles('.nvmrc') }}-${{ hashFiles('package-lock.json') }}
+      - if: steps.node-modules.outputs.cache-hit != 'true'
+        run: npm ci
+      - run: cp example.env .env
+      - name: Write this runner's test list
+        env:
+          PLAN: ${{ needs.pick.outputs.plan }}
+          SHARD: ${{ matrix.shard }}
+        run: node -e 'console.log(JSON.parse(process.env.PLAN)[process.env.SHARD].join("\n"))' > tests.txt
+      # AUTH_MODE=demo is fine for CI; the demo session route is the only
+      # path tests exercise. No Google credentials needed.
+      # --maxWorkers=2: the standard runner has 2 cores (the config's 5 is for a
+      # developer machine).
+      - name: Test
+        env:
+          LLM_PROVIDER: mock
+          AUTH_MODE: demo
+          # TEST_DATABASE_URL points the test bootstrap at the service above;
+          # adminUrl() swaps the db to `postgres` to run CREATE/DROP DATABASE.
+          TEST_DATABASE_URL: postgresql://chord:chord@127.0.0.1:5432/chord_test
+        # One vitest call with every file (xargs could split it into two). The JSON
+        # report is what the `timings` job learns from.
+        run: |
+          echo "cores: $(nproc)"
+          cd server
+          mapfile -t FILES < <(grep . ../tests.txt)
+          echo "${#FILES[@]} test files on this runner"
+          # vitest with no file arguments runs the WHOLE suite.
+          if [ "${#FILES[@]}" -eq 0 ]; then echo "Nothing to run."; exit 0; fi
+          npx vitest run --maxWorkers=2 --reporter=default --reporter=json \
+            --outputFile.json=../vitest-report.json "${FILES[@]}"
+      - name: Record test times
+        if: always()
+        env:
+          SHARD: ${{ matrix.shard }}
+        run: |
+          mkdir -p timings
+          node server/scripts/ci/test-shards.mjs record vitest-report.json "timings/timings-$SHARD.json"
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: timings-${{ matrix.shard }}
+          path: timings/
+          retention-days: 1
+
+  # Folds this run's test times into the saved ones, so the next run's shards
+  # come out even. Only main saves: a PR's cache is visible to that PR alone.
+  timings:
+    needs: [pick, test]
+    if: >-
+      always() && needs.test.result != 'skipped' && needs.test.result != 'cancelled' &&
+      github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/cache/restore@v4
+        with:
+          path: .ci-timings/test-timings.json
+          key: test-timings-${{ github.run_id }}
+          restore-keys: test-timings-
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: timings-*
+          path: new-timings
+          merge-multiple: true
+      - run: node server/scripts/ci/test-shards.mjs merge .ci-timings/test-timings.json new-timings .ci-timings/test-timings.json
+      # Keys cannot be overwritten, so each run saves under its own; restore takes the newest.
+      - uses: actions/cache/save@v4
+        with:
+          path: .ci-timings/test-timings.json
+          key: test-timings-${{ github.run_id }}

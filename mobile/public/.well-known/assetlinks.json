@@ -1,0 +1,13 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "app.chord.demo",
+      "sha256_cert_fingerprints": [
+        "52:F6:A2:A4:E2:65:0F:74:EC:C4:6C:1C:CC:D5:06:45:54:BC:D5:22:06:7F:B6:18:81:DE:49:69:EA:32:3F:10",
+        "CB:1E:92:A9:F9:94:98:91:98:5B:8F:BB:A8:82:74:92:85:4D:2F:07:E5:B6:CD:EE:B6:75:97:65:D8:D2:53:6A"
+      ]
+    }
+  }
+]

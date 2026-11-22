@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chord — Demo Flow Document</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --accent:#5B4FCF;
+  --accent-light:#EDE9FA;
+  --accent-dark:#3C3489;
+  --bg:#F7F6F2;
+  --bg2:#EFEDE8;
+  --card:#FFFFFF;
+  --text:#1A1A18;
+  --muted:#7A7970;
+  --border:#E5E3DC;
+  --green:#15803D;
+  --green-bg:#DCFCE7;
+  --red:#B91C1C;
+  --red-bg:#FEE2E2;
+  --amber:#B45309;
+  --amber-bg:#FEF3C7;
+  --chord-bg:#EDE9FA;
+  --left-bg:#F1EFE8;
+  --right-bg:#E8E7FF;
+  --phone-w:260px;
+  --phone-h:520px;
+}
+
+html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);font-size:15px;line-height:1.6}
+
+/* ── LAYOUT ── */
+.app{display:flex;height:100vh;overflow:hidden}
+
+/* Sidebar */
+.sidebar{width:280px;flex-shrink:0;background:var(--card);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow-y:auto;z-index:10}
+.sidebar::-webkit-scrollbar{width:4px}
+.sidebar::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+.sidebar-logo{padding:28px 24px 20px;border-bottom:1px solid var(--border)}
+.logo-text{font-family:'Syne',sans-serif;font-weight:800;font-size:26px;color:var(--accent);letter-spacing:-.02em;line-height:1}
+.logo-sub{font-size:11px;color:var(--muted);margin-top:3px;font-weight:300;letter-spacing:.04em;text-transform:uppercase}
+.sidebar-nav{padding:16px 12px;flex:1}
+.nav-group-label{font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding:8px 12px 4px}
+.nav-item{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;border-radius:8px;cursor:pointer;transition:background .15s;text-decoration:none;color:inherit;margin-bottom:2px}
+.nav-item:hover{background:var(--bg)}
+.nav-item.active{background:var(--accent-light)}
+.nav-item.active .nav-num{color:var(--accent-dark);background:var(--card)}
+.nav-item.active .nav-title{color:var(--accent-dark)}
+.nav-num{font-family:'Syne',sans-serif;font-size:11px;font-weight:700;width:22px;height:22px;border-radius:6px;background:var(--bg);color:var(--muted);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.nav-content{}
+.nav-title{font-size:13px;font-weight:500;line-height:1.3;color:var(--text)}
+.nav-sub{font-size:11px;color:var(--muted);margin-top:1px}
+
+/* Main */
+.main{flex:1;overflow-y:auto;padding:40px 48px 80px}
+.main::-webkit-scrollbar{width:6px}
+.main::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+
+/* Pages */
+.page{display:none;animation:fadeIn .2s ease}
+.page.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+/* Cover */
+.cover-hero{margin-bottom:48px}
+.cover-title{font-family:'Syne',sans-serif;font-size:56px;font-weight:800;color:var(--accent);letter-spacing:-.03em;line-height:1}
+.cover-date{font-size:13px;color:var(--muted);margin-top:8px;font-weight:300;letter-spacing:.04em;text-transform:uppercase}
+.flow-index{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:32px}
+.fi-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;cursor:pointer;transition:border-color .15s,transform .12s}
+.fi-card:hover{border-color:var(--accent);transform:translateY(-2px)}
+.fi-tag{font-size:10px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+.fi-title{font-family:'Syne',sans-serif;font-size:16px;font-weight:700;margin-bottom:4px;color:var(--text)}
+.fi-desc{font-size:12px;color:var(--muted);line-height:1.5}
+
+/* Section headers */
+.page-eyebrow{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:8px}
+.page-title{font-family:'Syne',sans-serif;font-size:32px;font-weight:800;color:var(--text);letter-spacing:-.02em;line-height:1.15;margin-bottom:6px}
+.page-desc{font-size:14px;color:var(--muted);max-width:600px;line-height:1.6;margin-bottom:32px;font-weight:300}
+.step-heading{font-family:'Syne',sans-serif;font-size:18px;font-weight:700;color:var(--text);margin:36px 0 6px}
+.step-sub{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:16px}
+.step-note{font-size:13px;color:var(--muted);font-style:italic;margin-bottom:12px;font-weight:300}
+
+/* Phone flow */
+.phone-flow{display:flex;align-items:flex-start;gap:0;overflow-x:auto;padding-bottom:8px;margin-bottom:32px}
+.phone-flow::-webkit-scrollbar{height:4px}
+.phone-flow::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+.phone-wrap{flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:6px}
+.phone-label{font-size:10px;font-weight:600;color:var(--muted);text-align:center;max-width:var(--phone-w);letter-spacing:.03em}
+.phone-frame{width:var(--phone-w);background:#111;border-radius:32px;padding:4px;flex-shrink:0;box-shadow:0 12px 32px rgba(0,0,0,.2)}
+.phone-inner{background:var(--bg);border-radius:28px;overflow:hidden;height:var(--phone-h);display:flex;flex-direction:column}
+.phone-bar{background:var(--card);height:30px;display:flex;align-items:center;justify-content:center;flex-shrink:0;border-radius:28px 28px 0 0}
+.phone-notch{width:80px;height:15px;background:#111;border-radius:0 0 12px 12px}
+.phone-screen{flex:1;overflow-y:auto;padding:10px 10px 8px}
+.phone-screen::-webkit-scrollbar{display:none}
+
+/* Phone header */
+.ph{background:var(--card);padding:8px 10px 6px;margin:-10px -10px 8px;border-bottom:1px solid var(--border)}
+.ph-avatars{display:flex;gap:3px;flex-wrap:wrap;margin-bottom:3px}
+.av{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:7px;font-weight:700;flex-shrink:0}
+.av-Ro{background:#DBEAFE;color:#1D4ED8}.av-Ma{background:#FCE7F3;color:#BE185D}
+.av-V{background:#DCFCE7;color:#15803D}.av-A{background:#FEF3C7;color:#B45309}
+.av-C{background:#EDE9FA;color:#5B4FCF}.av-Ab{background:#D1FAE5;color:#065F46}
+.av-Sa{background:#FEF9C3;color:#854D0E}.av-Ak{background:#EDE9FA;color:#5B4FCF}
+.av-Mi{background:#FEE2E2;color:#B91C1C}.av-Mt{background:#F0FDF4;color:#15803D}
+.av-Ti{background:#E0F2FE;color:#0369A1}
+.ph-name{font-size:11px;font-weight:600;color:var(--text)}
+.ph-sub{font-size:8.5px;color:var(--muted)}
+
+/* Bubbles */
+.msg{margin-bottom:7px;overflow:hidden}
+.msg-name{font-size:8px;font-weight:600;color:var(--muted);margin-bottom:2px;margin-left:2px}
+.msg-name.chord{color:var(--accent)}
+.bubble{padding:6px 9px;font-size:9.5px;line-height:1.45;white-space:pre-wrap;display:inline-block;max-width:84%}
+.bubble.left{background:var(--left-bg);border-radius:10px 10px 10px 2px;float:left;clear:both}
+.bubble.right{background:var(--right-bg);border-radius:10px 10px 2px 10px;float:right;clear:both}
+.bubble.chord{background:var(--chord-bg);border-radius:10px 10px 10px 2px;float:left;clear:both}
+.cf::after{content:'';display:table;clear:both}
+.b{font-weight:600}.acc{color:var(--accent)}
+
+/* Callout */
+.callout{background:var(--chord-bg);border-left:3px solid var(--accent);padding:8px 10px;border-radius:0 8px 8px 0;margin:8px 0;font-size:9px;line-height:1.55}
+.callout-label{font-size:7.5px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--accent);margin-bottom:3px}
+
+/* App view */
+.app-view{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:24px}
+.av-title{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;margin-bottom:4px}
+.av-sub{font-size:12px;color:var(--muted);margin-bottom:16px}
+
+/* Arrow between phones */
+.phone-arrow{display:flex;align-items:center;flex-shrink:0;padding:0 6px;align-self:center;margin-top:-30px}
+.arrow-line{height:1.5px;width:24px;background:var(--accent);opacity:.3}
+.arrow-tip{width:0;height:0;border-top:5px solid transparent;border-bottom:5px solid transparent;border-left:6px solid var(--accent);opacity:.35}
+
+/* Table */
+.data-table{width:100%;border-collapse:collapse;font-size:13px}
+.data-table th{background:var(--accent);color:#fff;font-size:11px;font-weight:600;padding:9px 12px;text-align:left;letter-spacing:.03em}
+.data-table th:first-child{border-radius:8px 0 0 0}
+.data-table th:last-child{border-radius:0 8px 0 0}
+.data-table td{padding:9px 12px;border-bottom:1px solid var(--border);vertical-align:top}
+.data-table tr:last-child td{border-bottom:none}
+.data-table tr:nth-child(even) td{background:var(--bg)}
+.pill{display:inline-block;font-size:10px;padding:2px 7px;border-radius:12px;font-weight:600}
+.pill-yes{background:var(--green-bg);color:var(--green)}
+.pill-no{background:var(--red-bg);color:var(--red)}
+.pill-host{background:var(--accent-light);color:var(--accent-dark)}
+.pill-solo{background:#F0E6FF;color:var(--accent)}
+.dish-tag{display:inline-block;background:var(--bg2);border:1px solid var(--border);font-size:10px;padding:1px 7px;border-radius:6px;color:var(--text)}
+
+/* Stats row */
+.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px}
+.stat-card{background:var(--bg);border-radius:10px;padding:14px 16px;text-align:center}
+.stat-n{font-family:'Syne',sans-serif;font-size:36px;font-weight:800;line-height:1}
+.stat-l{font-size:11px;color:var(--muted);margin-top:3px}
+
+/* Task list */
+.task-list{display:flex;flex-direction:column;gap:6px}
+.task-item{display:flex;align-items:flex-start;gap:10px;padding:10px 14px;background:var(--bg);border-radius:8px;border:1px solid var(--border)}
+.task-dot{width:16px;height:16px;border-radius:50%;border:1.5px solid var(--border);flex-shrink:0;margin-top:2px}
+.task-dot.done{background:var(--green);border-color:var(--green)}
+.task-text{font-size:13px;font-weight:500}
+.task-meta{font-size:11px;color:var(--muted);margin-top:2px}
+.reminder-pill{display:inline-block;background:var(--amber-bg);color:var(--amber);font-size:10px;padding:1px 7px;border-radius:10px;font-weight:600}
+
+/* List items */
+.list-items{background:var(--bg);border-radius:10px;overflow:hidden;border:1px solid var(--border)}
+.list-item{display:flex;align-items:center;gap:10px;padding:9px 14px;border-bottom:1px solid var(--border);font-size:13px}
+.list-item:last-child{border-bottom:none}
+.list-item.checked{color:var(--muted);text-decoration:line-through}
+.li-dot{width:14px;height:14px;border-radius:50%;border:1.5px solid var(--border);flex-shrink:0}
+.li-dot.checked{background:var(--green);border-color:var(--green)}
+
+/* Backend doc items */
+.doc-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.doc-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px}
+.doc-icon{font-size:18px;margin-bottom:6px}
+.doc-name{font-size:13px;font-weight:500;margin-bottom:2px}
+.doc-meta{font-size:11px;color:var(--muted)}
+.doc-badge{display:inline-block;font-size:10px;padding:1px 6px;border-radius:8px;margin-top:4px}
+.doc-private{background:#F1EFE8;color:var(--muted)}
+.doc-group{background:var(--chord-bg);color:var(--accent)}
+
+/* Calendar card */
+.cal-card{background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:12px}
+.cal-row{display:flex;align-items:center;padding:10px 14px;border-bottom:1px solid var(--border);font-size:13px;gap:10px}
+.cal-row:last-child{border-bottom:none}
+.cal-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.dot-green{background:var(--green)}.dot-amber{background:#F59E0B}
+.cal-name{font-weight:500;min-width:100px}
+.cal-type{color:var(--muted);font-size:12px}
+
+/* Divider */
+.hr{border:none;border-top:1px solid var(--border);margin:28px 0}
+
+/* Email badge */
+.email-badge{display:inline-flex;align-items:center;gap:8px;background:var(--chord-bg);border:1px solid #C4BCE8;border-radius:10px;padding:10px 16px;font-size:13px;margin-bottom:16px}
+.email-addr{color:var(--accent);font-weight:500}
+
+/* Individual chat */
+.ind-chat{max-width:480px}
+
+/* Bottom nav mock */
+.phone-bnav{background:var(--card);border-top:1px solid var(--border);padding:7px 10px 10px;display:flex;justify-content:space-around;flex-shrink:0}
+.bn{display:flex;flex-direction:column;align-items:center;gap:2px;font-size:7.5px;color:var(--muted)}
+.bn.on{color:var(--accent)}
+.bn-sq{width:16px;height:16px;border-radius:4px;background:var(--border)}
+.bn.on .bn-sq{background:var(--accent)}
+
+/* Responsive */
+@media(max-width:700px){
+  .sidebar{display:none}
+  .main{padding:24px 20px 60px}
+  .flow-index{grid-template-columns:1fr}
+  .stats-row{grid-template-columns:repeat(3,1fr)}
+  .cover-title{font-size:36px}
+}
+
+/* Scrollbar hint */
+.scroll-hint{font-size:11px;color:var(--muted);margin-bottom:8px;display:flex;align-items:center;gap:4px}
+.scroll-hint span{opacity:.5}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-text">Chord</div>
+    <div class="logo-sub">Demo flows · April 2026</div>
+  </div>
+  <div class="sidebar-nav">
+    <div class="nav-group-label">Start</div>
+    <a class="nav-item active" onclick="show('cover')">
+      <div class="nav-num">&#9679;</div>
+      <div class="nav-content"><div class="nav-title">Overview</div><div class="nav-sub">All flows + backend</div></div>
+    </a>
+    <a class="nav-item" onclick="show('backend')">
+      <div class="nav-num">&#9632;</div>
+      <div class="nav-content"><div class="nav-title">Backend setup</div><div class="nav-sub">Pre-seeded context</div></div>
+    </a>
+
+    <div class="nav-group-label" style="margin-top:12px">Doe family</div>
+    <a class="nav-item" onclick="show('flow1')">
+      <div class="nav-num">1</div>
+      <div class="nav-content"><div class="nav-title">Miami trip planning</div><div class="nav-sub">Dates, booking, hotel, tasks</div></div>
+    </a>
+    <a class="nav-item" onclick="show('flow2')">
+      <div class="nav-num">2</div>
+      <div class="nav-content"><div class="nav-title">Lists, reminders, saves</div><div class="nav-sub">Costco, car, restaurant</div></div>
+    </a>
+
+    <div class="nav-group-label" style="margin-top:12px">Individual</div>
+    <a class="nav-item" onclick="show('flow3')">
+      <div class="nav-num">3</div>
+      <div class="nav-content"><div class="nav-title">John — private chat</div><div class="nav-sub">Places, contacts, SF prep</div></div>
+    </a>
+
+    <div class="nav-group-label" style="margin-top:12px">Friends group</div>
+    <a class="nav-item" onclick="show('flow4')">
+      <div class="nav-num">4</div>
+      <div class="nav-content"><div class="nav-title">Potluck — RSVP</div><div class="nav-sub">Collection + dish tracking</div></div>
+    </a>
+    <a class="nav-item" onclick="show('flow5')">
+      <div class="nav-num">5</div>
+      <div class="nav-content"><div class="nav-title">Potluck — status</div><div class="nav-sub">Check-in + app summary</div></div>
+    </a>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<main class="main">
+
+<!-- ── COVER ── -->
+<div id="cover" class="page active">
+  <div class="cover-hero">
+    <div class="cover-title">Chord</div>
+    <div class="cover-date">Demo Flow Document &nbsp;·&nbsp; April 2026 &nbsp;·&nbsp; Confidential</div>
+  </div>
+  <p style="font-size:14px;color:var(--muted);max-width:560px;line-height:1.7;margin-bottom:28px;font-weight:300">Five annotated demo flows showing Chord's WhatsApp-first family coordination. Each screen shows the live chat state. Purple callout boxes show Chord's internal reasoning — narrate these live during demo.</p>
+  <div class="flow-index">
+    <div class="fi-card" onclick="show('backend')">
+      <div class="fi-tag">Setup</div>
+      <div class="fi-title">Backend context</div>
+      <div class="fi-desc">Pre-seeded documents, connected calendars, ingestion email. Show this first.</div>
+    </div>
+    <div class="fi-card" onclick="show('flow1')">
+      <div class="fi-tag">Flow 1 · Doe family</div>
+      <div class="fi-title">Miami trip planning</div>
+      <div class="fi-desc">Dates from school calendars, booking IDs, hotel gap detection, task creation.</div>
+    </div>
+    <div class="fi-card" onclick="show('flow2')">
+      <div class="fi-tag">Flow 2 · Doe family</div>
+      <div class="fi-title">Lists, reminders & saves</div>
+      <div class="fi-desc">Costco list, car reminder, restaurant link saved to Miami trip.</div>
+    </div>
+    <div class="fi-card" onclick="show('flow3')">
+      <div class="fi-tag">Flow 3 · Individual</div>
+      <div class="fi-title">John — private AI chat</div>
+      <div class="fi-desc">Saved places, media lists, contact notes with timed reminder, SF prep.</div>
+    </div>
+    <div class="fi-card" onclick="show('flow4')">
+      <div class="fi-tag">Flow 4 · Friends</div>
+      <div class="fi-title">Potluck — RSVP collection</div>
+      <div class="fi-desc">Chord silently tracks every yes/no and dish commitment from natural replies.</div>
+    </div>
+    <div class="fi-card" onclick="show('flow5')">
+      <div class="fi-tag">Flow 5 · Friends</div>
+      <div class="fi-title">Potluck — status check</div>
+      <div class="fi-desc">Full status: who's coming, who's solo, every dish, app live tracker.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── BACKEND ── -->
+<div id="backend" class="page">
+  <div class="page-eyebrow">Setup · show first</div>
+  <div class="page-title">Backend — pre-seeded context</div>
+  <div class="page-desc">Establish that Chord already has all this context before any flow begins. Walk through these two screens briefly.</div>
+
+  <div class="step-heading">Connected calendars</div>
+  <div class="cal-card">
+    <div class="cal-row"><div class="cal-dot dot-green"></div><div class="cal-name">John</div><div class="cal-type">Google Calendar — personal</div></div>
+    <div class="cal-row"><div class="cal-dot dot-green"></div><div class="cal-name">Alice</div><div class="cal-type">Google Calendar — personal</div></div>
+    <div class="cal-row"><div class="cal-dot dot-amber"></div><div class="cal-name">Nolan</div><div class="cal-type">School calendar — PDF + sync</div></div>
+    <div class="cal-row"><div class="cal-dot dot-amber"></div><div class="cal-name">Ben</div><div class="cal-type">School calendar — PDF + sync</div></div>
+  </div>
+
+  <div class="step-heading">Ingestion email</div>
+  <div class="email-badge">
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="4" width="12" height="9" rx="1.5" stroke="#5B4FCF" stroke-width="1.2"/><path d="M2 5.5L8 9.5L14 5.5" stroke="#5B4FCF" stroke-width="1.2"/></svg>
+    <span class="email-addr">doe-family@chord.app</span>
+    <span style="color:var(--muted);font-size:12px">— forward any doc here to index it</span>
+  </div>
+
+  <div class="step-heading">Pre-indexed documents</div>
+  <div class="doc-grid">
+    <div class="doc-card"><div class="doc-icon">📄</div><div class="doc-name">Passport — John</div><div class="doc-meta">Doc number + expiry</div><span class="doc-badge doc-private">🔒 Private</span></div>
+    <div class="doc-card"><div class="doc-icon">📄</div><div class="doc-name">Passport — Alice</div><div class="doc-meta">Doc number + expiry</div><span class="doc-badge doc-private">🔒 Private</span></div>
+    <div class="doc-card"><div class="doc-icon">🌐</div><div class="doc-name">Global Entry — all 4</div><div class="doc-meta">GE numbers for family</div><span class="doc-badge doc-group">🌐 Doe family</span></div>
+    <div class="doc-card"><div class="doc-icon">✈️</div><div class="doc-name">Mileage accounts</div><div class="doc-meta">United / Delta / AA</div><span class="doc-badge doc-private">🔒 John only</span></div>
+    <div class="doc-card"><div class="doc-icon">🏫</div><div class="doc-name">Nolan school calendar</div><div class="doc-meta">Term dates + off days</div><span class="doc-badge doc-group">🌐 Doe family</span></div>
+    <div class="doc-card"><div class="doc-icon">🏫</div><div class="doc-name">Ben school calendar</div><div class="doc-meta">Term dates + off days</div><span class="doc-badge doc-group">🌐 Doe family</span></div>
+  </div>
+
+  <div class="step-heading">WhatsApp group</div>
+  <div class="cal-card">
+    <div class="cal-row"><div class="cal-dot dot-green"></div><div class="cal-name">Chord added</div><div class="cal-type">Member of Doe family WhatsApp group</div></div>
+    <div class="cal-row"><div class="cal-dot dot-green"></div><div class="cal-name">Chat history</div><div class="cal-type">90-day history accessible + indexed</div></div>
+  </div>
+</div>
+
+<!-- ── FLOW 1 ── -->
+<div id="flow1" class="page">
+  <div class="page-eyebrow">Flow 1 · Doe family</div>
+  <div class="page-title">Miami trip planning</div>
+  <div class="page-desc">Group: John, Alice, Ben, Nolan, Chord. Scroll right on each row to see the full screen transition. Purple boxes show Chord's internal reasoning — narrate live.</div>
+
+  <div class="step-heading">Step A — Alice asks about dates</div>
+  <div class="scroll-hint"><span>↔</span> scroll right to see transitions</div>
+  <div class="phone-flow">
+    <!-- 1a -->
+    <div class="phone-wrap">
+      <div class="phone-frame"><div class="phone-inner">
+        <div class="phone-bar"><div class="phone-notch"></div></div>
+        <div class="phone-screen">
+          <div class="ph"><div class="ph-avatars"><div class="av av-Ro">Ro</div><div class="av av-Ma">Ma</div><div class="av av-V">Vi</div><div class="av av-A">Ad</div><div class="av av-C">C</div></div><div class="ph-name">Doe Family</div><div class="ph-sub">WhatsApp · 5 members</div></div>
+          <div class="msg cf"><div class="msg-name">Alice</div><div class="bubble left">Guys and <span class="acc b">@Chord</span> — let's plan a Miami trip for long weekend. When is Nolan off and when is Ben off?</div></div>
+        </div>
+      </div></div>
+      <div class="phone-label">1a · Alice sends query</div>
+    </div>
+    <div class="phone-arrow"><div class="arrow-line"></div><div class="arrow-tip"></div></div>
+    <!-- 1b -->
+    <div class="phone-wrap">
+      <div class="phone-frame"><div class="phone-inner">
+        <div class="phone-bar"><div class="phone-notch"></div></div>
+        <div class="phone-screen">
+          <div class="ph"><div class="ph-name">Doe Family</div><div class="ph-sub">WhatsApp Group</div></div>
+          <div class="msg cf"><div class="msg-name">Alice</div><div class="bubble left">Guys and <span class="acc b">@Chord</span> — let's plan a Miami trip…</div></div>
+          <div class="callout"><div class="callout-label">Chord context lookup</div>Next long weekend = Presidents' Day Mon 2/17. Fri 2/14 = Valentine's Day. Checking Nolan school cal → Fri 2/14 marked off. Checking Ben school cal → 2/14 and 2/17 not listed as off days.</div>
+          <div class="msg cf"><div class="msg-name chord">Chord</div><div class="bubble chord">Nolan is free <span class="b">Fri 2/14</span> + <span class="b">Mon 2/17</span>. Ben's calendar doesn't show either day as off — he can only do the weekend itself.</div></div>
+        </div>
+      </div></div>
+      <div class="phone-label">1b · Chord replies with calendar data</div>
+    </div>
+    <div class="phone-arrow"><div class="arrow-line"></div><div class="arrow-tip"></div></div>
+    <!-- 1c -->
+    <div class="phone-wrap">
+      <div class="phone-frame"><div class="phone-inner">
+        <div class="phone-bar"><div class="phone-notch"></div></div>
+        <div class="phone-screen">
+          <div class="ph"><div class="ph-name">Doe Family</div><div class="ph-sub">WhatsApp Group</div></div>
+          <div class="msg cf"><div class="msg-name chord">Chord</div><div class="bubble chord">Nolan free Fri 2/14 + Mon 2/17. Ben can only do the weekend.</div></div>
+          <div class="msg cf"><div class="msg-name">Alice</div><div class="bubble left">Dang so Ben can only do weekend. Let me check flights 🔍</div></div>
+        </div>
+      </div></div>
+      <div class="phone-label">1c · Family reacts</div>
+    </div>
+  </div>
+
+  <div class="step-heading">Step B — Booking: Global Entry + mileage</div>
+  <div class="step-note">A few days later…</div>
+  <div class="phone-flow">
+    <div class="phone-wrap">
+      <div class="phone-frame"><div class="phone-inner">
+        <div class="phone-bar"><div class="phone-notch"></div></div>
+        <div class="phone-screen">
+          <div class="ph"><div class="ph-name">Doe Family</div><div class="ph-sub">WhatsApp Group</div></div>
+          <div class="msg cf"><div class="msg-name">Alice</div><div class="bubble left">I am booking. <span class="acc b">@Chord</span> — what are our Global Entry and mileage plus numbers?</div></div>
+        </div>
+      </div></div>
+      <div class="phone-label">2a · Alice asks for IDs</div>
+    </div>
+    <div class="phone-arrow"><div class="arrow-line"></div><div class="arrow-tip"></div></div>
+    <div class="phone-wrap">
+      <div class="phone-frame"><div class="phone-inner">
+        <div class="phone-bar"><div class="phone-notch"></div></div>
+        <div class="phone-screen">
+          <div class="ph"><div class="ph-name">Doe Family</div><div class="ph-sub">WhatsApp Group</div></div>
+          <div class="msg cf"><div class="msg-name chord">Chord</div><div class="bubble chord">Global Entry: John ••••1, Alice ••••2, Nolan ••••3, Ben ••••4.
+
+Mileage — which airline? I have John: United, Delta, AA.</div></div>
+          <div class="msg cf"><div class="msg-name">Alice</div><div class="bubble left">United works</div></div>
+          <div class="msg cf"><div class="msg-name chord">Chord</div><div class="bubble chord">John United MileagePlus: <span class="b">MP••••5678</span></div></div>
+          <div class="msg cf"><div class="msg-name">John</div><div class="bubble right">[shares booking screenshot to group]</div></div>
+        </div>
+      </div></div>
+      <div class="phone-label">2b · Chord pulls from indexed docs</div>
+    </div>
+  </div>
+
+  <div class="step-heading">Step C — John books Ben, sets reminder, uploads hotel</div>
+  <div class="step-note">A few days later…</div>
+  <div class="phone-flow">
+    <div class="phone-wrap">
+      <div class="phone-frame"><div class="phone-inner">
+        <div class="phone-bar"><div class="phone-notch"></div></div>
+        <div class="phone-screen">
+          <div class="ph"><div class="ph-name">Doe Family</div></div>
+          <div class="msg cf"><div class="msg-name">John</div><div class="bubble right">Booking Ben today to land when we land. <span class="acc b">@Chord</span> — remind me when we land</div></div>
+          <div class="msg cf"><div class="msg-name chord">Chord</div><div class="bubble chord">Set! Reminder when AA412 lands 2/15 10:15 AM. Added to family calendar too.</div></div>
+        </div>
+      </div></div>
+      <div class="phone-label">3a · Reminder set + calendar</div>
+    </div>
+    <div class="phone-arrow"><div class="arrow-line"></div><div class="arrow-tip"></div></div>
+    <div class="phone-wrap">
+      <div class="phone-frame"><div class="phone-inner">
+        <div class="phone-bar"><div class="phone-notch"></div></div>
+        <div class="phone-screen">
+          <div class="ph"><div class="ph-name">Doe Family</div></div>
+          <div class="msg cf"><div class="msg-name">John</div><div class="bubble right"><span class="acc b">@Chord</span> how far is Wynwood Walls from our hotel at South Beach?</div></div>
+          <div class="msg cf"><div class="msg-name chord">Chord</div><div class="bubble chord">~4 miles / 15 min drive. I can show it cleanly on a map → <span class="acc">Open in app</span></div></div>
+          <div class="msg cf"><div class="msg-name">John</div><div class="bubble right"><span class="acc b">@Chord</span> remind me to book a car closer to the date</div></div>
+          <div class="msg cf"><div class="msg-name chord">Chord</div><div class="bubble chord">Task created: <span class="b">Book rental car for Miami</span>. Reminder 3 weeks before 2/15. <span class="acc">View in app →</span></div></div>
+        </div>
+      </div></div>
+      <div class="phone-label">3b · Map query + car reminder</div>
+    </div>
+    <div class="phone-arrow"><div class="arrow-line"></div><div class="arrow-tip"></div></div>
+    <div class="phone-wrap">
+      <div class="phone-frame"><div class="phone-inner">
+        <div class="phone-bar"><div class="phone-notch"></div></div>
+        <div class="phone-screen">
+          <div class="ph"><div class="ph-name">Doe Family</div></div>
+          <div class="msg cf"><div class="msg-name">John</div><div class="bubble right">[forwards hotel confirmation PDF]</div></div>
+          <div class="msg cf"><div class="msg-name chord">Chord</div><div class="bubble chord">Indexed — <span class="b">1 Hotel South Beach</span> · 2/15–2/16. Trip is 3 nights — 1 night unaccounted. Want me to remind you to book the 3rd?</div></div>
+          <div class="msg cf"><div class="msg-name">John</div><div class="bubble right">No — we're with friends on last night</div></div>
+          <div class="msg cf"><div class="msg-name chord">Chord</div><div class="bubble chord">Got it, marked complete.</div></div>
+        </div>
+      </div></div>
+      <div class="phone-label">3c · Hotel upload + gap detection</div>
+    </div>
+    <div class="phone-arrow"><div class="arrow-line"></div><div class="arrow-tip"></div></div>
+    <div class="phone-wrap">
+      <div class="phone-frame"><div class="phone-inner">
+        <div class="phone-bar"><div class="phone-notch"></div></div>
+        <div class="phone-screen">
+          <div class="ph"><div class="ph-name">Tasks</div><div class="ph-sub">Doe Family · chord.app</div></div>
+          <div class="task-list">
+            <div class="task-item"><div class="task-dot done"></div><div><div class="task-text">Book Miami flights</div><div class="task-meta" style="color:var(--green)">Done · Alice</div></div></div>
+            <div class="task-item"><div class="task-dot"></div><div><div class="task-text">Book Ben's flight</div><div class="task-meta">John · due 2/10</div></div></div>
+            <div class="task-item"><div class="task-dot"></div><div><div class="task-text">Book rental car</div><div class="task-meta">John · <span class="reminder-pill">Remind 1/25</span></div></div></div>
+            <div class="task-item"><div class="task-dot done"></div><div><div class="task-text">Hotel (2 nights)</div><div class="task-meta" style="color:var(--green)">Done · 1 Hotel South Beach</div></div></div>
+          </div>
+        </div>
+        <div class="phone-bnav"><div class="bn">💬<span>Chat</span></div><div class="bn on"><div class="bn-sq"></div><span>Tasks</span></div><div class="bn"><div class="bn-sq"></div><span>Trips</span></div></div>
+      </div></div>
+      <div class="phone-label">3d · Tasks view in app</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── FLOW 2 ── -->
+<div id="flow2" class="page">
+  <div class="page-eyebrow">Flow 2 · Doe family</div>
+  <div class="page-title">Lists, reminders &amp; saves</div>
+  <div class="page-desc">Continuation of Miami trip context. Costco list added in one message, car rental task created, restaurant link detected and saved.</div>
+
+  <div class="step-heading">Step D — Costco list + calendar task</div>
+  <div class="phone-flow">
+    <div class="phone-wrap">
+      <div class="phone-frame"><div class="phone-inner">
+        <div class="phone-bar"><div class="phone-notch"></div></div>
+        <div class="phone-screen">
+          <div class="ph"><div class="ph-name">Doe Family</div></div>
+          <div class="msg cf"><div class="msg-name">John</div><div class="bubble right"><span class="acc b">@Chord</span> add to Costco list — sunscreen, snorkels, beach towels. And add to calendar we need to go over the weekend.</div></div>
+          <div class="msg cf"><div class="msg-name chord">Chord</div><div class="bubble chord">Added 3 items to Costco list. Calendar event: <span class="b">Costco run</span> · this weekend. Task created: Pick up car rental docs.</div></div>
+        </div>
+      </div></div>
+      <div class="phone-label">4a · One message, three actions</div>
+    </div>
+    <div class="phone-arrow"><div class="arrow-line"></div><div class="arrow-tip"></div></div>
+    <div class="phone-wrap">
+      <div class="phone-frame"><div class="phone-inner">
+        <div class="phone-bar"><div class="phone-notch"></div></div>
+        <div class="phone-screen">
+          <div class="ph"><div class="ph-name">Lists</div><div class="ph-sub">Doe Family</div></div>
+          <div style="font-size:9px;font-weight:600;color:var(--muted);margin-bottom:6px">Costco · 5 items</div>
+          <div class="list-items">
+            <div class="list-item"><div class="li-dot"></div>Sunscreen</div>
+            <div class="list-item"><div class="li-dot"></div>Snorkels</div>
+            <div class="list-item"><div class="li-dot"></div>Beach towels</div>
+            <div class="list-item"><div class="li-dot"></div>Water bottles</div>
+            <div class="list-item checked"><div class="li-dot checked"></div>Bug spray</div>
+          </div>
+        </div>
+        <div class="phone-bnav"><div class="bn"><div class="bn-sq"></div><span>Chat</span></div><div class="bn"><div class="bn-sq"></div><span>Tasks</span></div><div class="bn on"><div class="bn-sq"></div><span>Lists</span></div></div>
+      </div></div>
+      <div class="phone-label">4b · Costco list in app</div>
+    </div>
+  </div>
+
+  <div class="step-heading">Step E — Restaurant link saved to Miami trip</div>
+  <div class="phone-flow">
+    <div class="phone-wrap">
+      <div class="phone-frame"><div class="phone-inner">
+        <div class="phone-bar"><div class="phone-notch"></div></div>
+        <div class="phone-screen">
+          <div class="ph"><div class="ph-name">Doe Family</div></div>
+          <div class="msg cf"><div class="msg-name">Alice</div><div class="bubble left">[shares Carbone Miami link]</div></div>
+          <div class="msg cf"><div class="msg-name chord">Chord</div><div class="bubble chord">Save <span class="b">Carbone Miami</span> to your Miami trip? Reply <span class="b">save</span></div></div>
+          <div class="msg cf"><div class="msg-name">Alice</div><div class="bubble left">save</div></div>
+          <div class="msg cf"><div class="msg-name chord">Chord</div><div class="bubble chord">Saved Carbone Miami · Italian. Reminder: make a reservation before 2/10. <span class="acc">View Miami trip →</span></div></div>
+        </div>
+      </div></div>
+      <div class="phone-label">5a · URL detected → save flow</div>
+    </div>
+    <div class="phone-arrow"><div class="arrow-line"></div><div class="arrow-tip"></div></div>
+    <div class="phone-wrap">
+      <div class="phone-frame"><div class="phone-inner">
+        <div class="phone-bar"><div class="phone-notch"></div></div>
+        <div class="phone-screen">
+          <div class="ph"><div class="ph-name">Miami Trip · Saves</div><div class="ph-sub">Feb 15–17</div></div>
+          <div class="task-list">
+            <div class="task-item" style="gap:8px"><div style="font-size:18px">🍝</div><div><div class="task-text">Carbone Miami</div><div class="task-meta">Italian · Wynwood</div><div class="task-meta"><span class="reminder-pill">Resy by 2/10</span></div></div></div>
+            <div class="task-item" style="gap:8px"><div style="font-size:18px">🎨</div><div><div class="task-text">Wynwood Walls</div><div class="task-meta">Art · 4 mi from hotel</div></div></div>
+          </div>
+        </div>
+        <div class="phone-bnav"><div class="bn"><div class="bn-sq"></div><span>Chat</span></div><div class="bn"><div class="bn-sq"></div><span>Tasks</span></div><div class="bn on"><div class="bn-sq"></div><span>Saves</span></div></div>
+      </div></div>
+      <div class="phone-label">5b · Saves in Miami trip</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── FLOW 3 ── -->
+<div id="flow3" class="page">
+  <div class="page-eyebrow">Flow 3 · Individual</div>
+  <div class="page-title">John — private AI chat</div>
+  <div class="page-desc">Private 1:1 between John and Chord. Not visible to anyone else. Persistent history, no per-message cost, richer responses than WhatsApp.</div>
+
+  <div class="step-heading">Interaction 1 — Save a favourite place</div>
+  <div class="phone-flow">
+    <div class="phone-wrap">
+      <div class="phone-frame"><div class="phone-inner">
+        <div class="phone-bar"><div class="phone-notch"></div></div>
+        <div class="phone-screen">
+          <div class="ph"><div class="ph-name">My Chord</div><div class="ph-sub">Private · John</div></div>
+          <div class="msg cf"><div class="bubble right">Add to my list of liked places — Freds</div></div>
+          <div class="msg cf"><div class="msg-name chord">Chord</div><div class="bubble chord">Saved Fred's to your places. NYC? Want to add a note — cuisine, occasion?</div></div>
+          <div class="msg cf"><div class="bubble right">Madison Ave. Lunch spot. Great for business.</div></div>
+          <div class="msg cf"><div class="msg-name chord">Chord</div><div class="bubble chord">Got it — Fred's · Madison Ave
+Tags: Lunch · Business · NYC</div></div>
+        </div>
+      </div></div>
+      <div class="phone-label">I-1 · Save favourite place</div>
+    </div>
+  </div>
+
+  <div class="step-heading">Interaction 2 — Media lists</div>
+  <div class="phone-flow">
+    <div class="phone-wrap">
+      <div class="phone-frame"><div class="phone-inner">
+        <div class="phone-bar"><div class="phone-notch"></div></div>
+        <div class="phone-screen">
+          <div class="ph"><div class="ph-name">My Chord</div><div class="ph-sub">Private · John</div></div>
+          <div class="msg cf"><div class="bubble right">Add to my reading list — Chip War. Podcast list — Founders #321. Watch list — Silo S2.</div></div>
+          <div class="msg cf"><div class="msg-name chord">Chord</div><div class="bubble chord">Added:
+📚 Chip War → reading list
+🎧 Founders #321 → podcasts
+📺 Silo S2 → watch list</div></div>
+        </div>
+      </div></div>
+      <div class="phone-label">I-2 · Media lists</div>
+    </div>
+  </div>
+
+  <div class="step-heading">Interaction 3 — New contact + timed reminder</div>
+  <div class="phone-flow">
+    <div class="phone-wrap">
+      <div class="phone-frame"><div class="phone-inner">
+        <div class="phone-bar"><div class="phone-notch"></div></div>
+        <div class="phone-screen">
+          <div class="ph"><div class="ph-name">My Chord</div><div class="ph-sub">Private · John</div></div>
+          <div class="msg cf"><div class="bubble right">I met Victor Mishra today. Add to my notes — Columbia, IIT-B, wife Shruti, 2 kids one at Columbia. Remind me to call him in 2 months when World Cup starts.</div></div>
+          <div class="msg cf"><div class="msg-name chord">Chord</div><div class="bubble chord">Saved contact: <span class="b">Victor Mishra</span>
+Columbia · IIT-B
+Wife: Shruti · 2 kids (1 at Columbia)
+
+<span class="reminder-pill">Reminder: Call Victor — June 14 (World Cup)</span></div></div>
+        </div>
+      </div></div>
+      <div class="phone-label">I-3 · Contact + smart reminder</div>
+    </div>
+  </div>
+
+  <div class="step-heading">Interaction 4 — SF trip prep: who to meet</div>
+  <div class="phone-flow">
+    <div class="phone-wrap">
+      <div class="phone-frame"><div class="phone-inner">
+        <div class="phone-bar"><div class="phone-notch"></div></div>
+        <div class="phone-screen">
+          <div class="ph"><div class="ph-name">My Chord</div><div class="ph-sub">Private · John</div></div>
+          <div class="msg cf"><div class="bubble right">Headed to SF. Check who's there I should meet from prior interactions.</div></div>
+          <div class="callout"><div class="callout-label">Chord searches memory</div>Scanning contacts + notes tagged SF / Bay Area…</div>
+          <div class="msg cf"><div class="msg-name chord">Chord</div><div class="bubble chord">3 people from your notes in SF:
+
+<span class="b">Arjun Shah</span> · ex-colleague, Andreessen
+<span class="b">Priya Kapoor</span> · Stanford · met Jan 24
+<span class="b">Tom Briggs</span> · Sequoia · "follow up on fund"
+
+Want me to draft outreach for any?</div></div>
+        </div>
+      </div></div>
+      <div class="phone-label">I-4 · Memory-based contact lookup</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── FLOW 4 ── -->
+<div id="flow4" class="page">
+  <div class="page-eyebrow">Flow 4 · Friends group</div>
+  <div class="page-title">Potluck — RSVP collection</div>
+  <div class="page-desc">Group: Friends + spouses. 17 members — John, Mark, Aaron, Sam, Alan, Michael, Matt, Tina + respective spouses + Chord. Chord tracks silently throughout — no commands needed from members.</div>
+
+  <div class="step-heading">Step A — John proposes, Chord opens tracker</div>
+  <div class="phone-flow">
+    <div class="phone-wrap">
+      <div class="phone-frame"><div class="phone-inner">
+        <div class="phone-bar"><div class="phone-notch"></div></div>
+        <div class="phone-screen">
+          <div class="ph">
+            <div class="ph-avatars"><div class="av av-Ro">Ro</div><div class="av av-Ma">Ma</div><div class="av av-Ab">Ab</div><div class="av av-Sa">Sa</div><div class="av av-Ak">Ak</div><div class="av av-Mi">Mi</div><div class="av av-Mt">Mt</div><div class="av av-Ti">Ti</div><div class="av av-C">C</div></div>
+            <div class="ph-name">Friends + spouses</div><div class="ph-sub">WhatsApp · 17 members</div>
+          </div>
+          <div class="msg cf"><div class="msg-name">John</div><div class="bubble right">Hey all — potluck at ours Sat Feb 22, 7pm. <span class="acc b">@Chord</span> track who's coming and what people are bringing.</div></div>
+        </div>
+      </div></div>
+      <div class="phone-label">A1 · John kicks it off</div>
+    </div>
+    <div class="phone-arrow"><div class="arrow-line"></div><div class="arrow-tip"></div></div>
+    <div class="phone-wrap">
+      <div class="phone-frame"><div class="phone-inner">
+        <div class="phone-bar"><div class="phone-notch"></div></div>
+        <div class="phone-screen">
+          <div class="ph"><div class="ph-name">Friends + spouses</div></div>
+          <div class="msg cf"><div class="msg-name">John</div><div class="bubble right">Potluck at ours Sat Feb 22, 7pm. <span class="acc b">@Chord</span> track…</div></div>
+          <div class="callout"><div class="callout-label">Chord creates event</div>Potluck · John's place (from Doe family memory) · Sat Feb 22, 7pm. Opening RSVP tracker. Will extract attendees + dish commitments from natural language replies.</div>
+          <div class="msg cf"><div class="msg-name chord">Chord</div><div class="bubble chord">On it! I'll track RSVPs and dishes as people reply. Just say yes, no, or what you're bringing — I'll note it all.</div></div>
+        </div>
+      </div></div>
+      <div class="phone-label">A2 · Chord confirms + opens tracker</div>
+    </div>
+  </div>
+
+  <div class="step-heading">Step B — RSVPs roll in (Chord tracks silently)</div>
+  <div class="phone-flow">
+    <div class="phone-wrap">
+      <div class="phone-frame"><div class="phone-inner">
+        <div class="phone-bar"><div class="phone-notch"></div></div>
+        <div class="phone-screen">
+          <div class="ph"><div class="ph-name">Friends + spouses</div><div class="ph-sub">Replies coming in…</div></div>
+          <div class="msg cf"><div class="msg-name">Mark</div><div class="bubble left">In! Bringing dal makhani for 8</div></div>
+          <div class="msg cf"><div class="msg-name">Aaron</div><div class="bubble left">Yes both of us. We'll do dessert — gulab jamun</div></div>
+          <div class="msg cf"><div class="msg-name">Sam</div><div class="bubble left">Can't make it, out of town that weekend</div></div>
+          <div class="msg cf"><div class="msg-name">Alan</div><div class="bubble left">Coming solo — wife traveling. I'll bring wine</div></div>
+          <div class="msg cf"><div class="msg-name">Michael</div><div class="bubble left">We're in! Thinking apps — maybe bruschetta?</div></div>
+        </div>
+      </div></div>
+      <div class="phone-label">B1 · First wave of replies</div>
+    </div>
+    <div class="phone-arrow"><div class="arrow-line"></div><div class="arrow-tip"></div></div>
+    <div class="phone-wrap">
+      <div class="phone-frame"><div class="phone-inner">
+        <div class="phone-bar"><div class="phone-notch"></div></div>
+        <div class="phone-screen">
+          <div class="ph"><div class="ph-name">Friends + spouses</div><div class="ph-sub">More replies…</div></div>
+          <div class="msg cf"><div class="msg-name">Matt</div><div class="bubble left">Count us in. We'll bring a cheese board</div></div>
+          <div class="msg cf"><div class="msg-name">Tina</div><div class="bubble left">Yes! Coming with husband. We'll make dumplings</div></div>
+          <div class="callout"><div class="callout-label">Chord silent tracking (not shown in chat)</div>8 households contacted. Confirmed: Mark ×2, Aaron ×2, Alan ×1 (solo — from message), Michael ×2, Matt ×2, Tina ×2. Declined: Sam ×2. Dishes: dal makhani, gulab jamun, bruschetta, cheese board, dumplings, wine. All households accounted for.</div>
+        </div>
+      </div></div>
+      <div class="phone-label">B2 · Chord tracking silently</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── FLOW 5 ── -->
+<div id="flow5" class="page">
+  <div class="page-eyebrow">Flow 5 · Friends group</div>
+  <div class="page-title">Potluck — status check</div>
+  <div class="page-desc">The next day. Mark asks @Chord for a full rundown. One message synthesises everything. App shows the live tracker.</div>
+
+  <div class="step-heading">Step C — Mark asks @Chord for status</div>
+  <div class="phone-flow">
+    <div class="phone-wrap">
+      <div class="phone-frame"><div class="phone-inner">
+        <div class="phone-bar"><div class="phone-notch"></div></div>
+        <div class="phone-screen">
+          <div class="ph"><div class="ph-name">Friends + spouses</div><div class="ph-sub">Next day</div></div>
+          <div class="msg cf"><div class="msg-name">Mark</div><div class="bubble left"><span class="acc b">@Chord</span> are we all set? Who hasn't replied, who's coming solo, and what's everyone bringing?</div></div>
+        </div>
+      </div></div>
+      <div class="phone-label">C1 · Mark asks for rundown</div>
+    </div>
+    <div class="phone-arrow"><div class="arrow-line"></div><div class="arrow-tip"></div></div>
+    <div class="phone-wrap">
+      <div class="phone-frame"><div class="phone-inner">
+        <div class="phone-bar"><div class="phone-notch"></div></div>
+        <div class="phone-screen">
+          <div class="ph"><div class="ph-name">Friends + spouses</div></div>
+          <div class="msg cf"><div class="msg-name chord">Chord</div><div class="bubble chord" style="max-width:95%"><span class="b">Potluck · Feb 22 · John's</span>
+
+<span class="b">Coming (11):</span>
+John + Alice (hosts)
+Mark + wife · Aaron + wife
+Michael + wife · Matt + wife
+Tina + husband
+Alan <span style="font-size:8px;background:#F0E6FF;color:var(--accent);padding:1px 4px;border-radius:4px">solo</span>
+
+<span class="b">Not coming:</span> Sam + wife
+
+<span class="b">No reply yet:</span> None ✓
+
+<span class="b">Dishes:</span>
+Mark — dal makhani
+Aaron — gulab jamun
+Michael — bruschetta
+Matt — cheese board
+Tina — dumplings
+Alan — wine
+John — TBD (host)
+
+<span class="acc">Full details in app →</span></div></div>
+        </div>
+      </div></div>
+      <div class="phone-label">C2 · Chord's full status reply</div>
+    </div>
+    <div class="phone-arrow"><div class="arrow-line"></div><div class="arrow-tip"></div></div>
+    <div class="phone-wrap">
+      <div class="phone-frame"><div class="phone-inner">
+        <div class="phone-bar"><div class="phone-notch"></div></div>
+        <div class="phone-screen">
+          <div class="ph"><div class="ph-name">Potluck · Feb 22</div><div class="ph-sub">Friends · chord.app</div></div>
+          <div class="stats-row" style="grid-template-columns:repeat(3,1fr);gap:5px;margin-bottom:8px">
+            <div class="stat-card" style="padding:8px;background:var(--green-bg)"><div class="stat-n" style="font-size:24px;color:var(--green)">11</div><div class="stat-l">attending</div></div>
+            <div class="stat-card" style="padding:8px;background:var(--red-bg)"><div class="stat-n" style="font-size:24px;color:var(--red)">2</div><div class="stat-l">declined</div></div>
+            <div class="stat-card" style="padding:8px;background:var(--chord-bg)"><div class="stat-n" style="font-size:24px;color:var(--accent)">7</div><div class="stat-l">dishes</div></div>
+          </div>
+          <div style="font-size:8.5px;font-weight:600;color:var(--muted);margin-bottom:5px;text-transform:uppercase;letter-spacing:.05em">RSVP tracker</div>
+          <div style="font-size:8.5px">
+            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border)"><span style="font-weight:600">John + Alice</span><span class="pill pill-host" style="font-size:8px">hosting</span></div>
+            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border)"><span style="font-weight:600">Mark + wife</span><div><span class="pill pill-yes" style="font-size:8px">yes</span> <span class="dish-tag" style="font-size:7.5px">dal makhani</span></div></div>
+            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border)"><span style="font-weight:600">Aaron + wife</span><div><span class="pill pill-yes" style="font-size:8px">yes</span> <span class="dish-tag" style="font-size:7.5px">gulab jamun</span></div></div>
+            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border)"><span style="font-weight:600">Sam + wife</span><span class="pill pill-no" style="font-size:8px">no</span></div>
+            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border)"><span style="font-weight:600">Alan</span><div><span class="pill pill-yes" style="font-size:8px">yes</span> <span class="pill pill-solo" style="font-size:8px">solo</span> <span class="dish-tag" style="font-size:7.5px">wine</span></div></div>
+            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border)"><span style="font-weight:600">Michael + wife</span><div><span class="pill pill-yes" style="font-size:8px">yes</span> <span class="dish-tag" style="font-size:7.5px">bruschetta</span></div></div>
+            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border)"><span style="font-weight:600">Matt + wife</span><div><span class="pill pill-yes" style="font-size:8px">yes</span> <span class="dish-tag" style="font-size:7.5px">cheese board</span></div></div>
+            <div style="display:flex;justify-content:space-between;padding:4px 0"><span style="font-weight:600">Tina + husband</span><div><span class="pill pill-yes" style="font-size:8px">yes</span> <span class="dish-tag" style="font-size:7.5px">dumplings</span></div></div>
+          </div>
+        </div>
+        <div class="phone-bnav"><div class="bn"><div class="bn-sq"></div><span>Chat</span></div><div class="bn on"><div class="bn-sq"></div><span>Events</span></div><div class="bn"><div class="bn-sq"></div><span>Lists</span></div></div>
+      </div></div>
+      <div class="phone-label">C3 · App tracker — live view</div>
+    </div>
+  </div>
+
+  <div class="step-heading">What the app knows</div>
+  <div class="app-view">
+    <table class="data-table">
+      <tr><th>Data point</th><th>Value</th><th>Source</th></tr>
+      <tr><td><strong>Location</strong></td><td>John's home address</td><td>Cross-referenced from Doe family group memory — not stated in Friends group</td></tr>
+      <tr><td><strong>Date / time</strong></td><td>Sat Feb 22, 7pm</td><td>John's message · Added to group calendar</td></tr>
+      <tr><td><strong>Attendee count</strong></td><td>11 confirmed</td><td>Aggregated from individual replies</td></tr>
+      <tr><td><strong>Solo flag</strong></td><td>Alan</td><td>Extracted from "coming solo — wife traveling"</td></tr>
+      <tr><td><strong>Dish list</strong></td><td>7 items committed</td><td>Natural language extraction, zero commands</td></tr>
+      <tr><td><strong>Pending replies</strong></td><td>None</td><td>All 8 households accounted for</td></tr>
+    </table>
+  </div>
+</div>
+
+</main>
+</div>
+
+<script>
+function show(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => {
+    if (n.getAttribute('onclick') && n.getAttribute('onclick').includes("'"+id+"'")) {
+      n.classList.add('active');
+    }
+  });
+  document.querySelector('.main').scrollTo(0,0);
+}
+// fi-cards on cover
+document.querySelectorAll('.fi-card').forEach(c => {
+  c.addEventListener('click', function() {
+    const fn = this.getAttribute('onclick');
+    if (fn) eval(fn);
+  });
+});
+</script>
+</body>
+</html>

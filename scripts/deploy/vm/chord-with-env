@@ -1,0 +1,4 @@
+#!/bin/sh
+# Installed as /usr/local/bin/chord-with-env (ADR 0211). Runs a command with the app's full
+# environment (settings + Secret Manager secrets), as YOU, not as root.
+exec sudo /usr/bin/env node /usr/local/lib/chord/with-env.mjs "$@"

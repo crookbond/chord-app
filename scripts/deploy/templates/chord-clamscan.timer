@@ -1,0 +1,10 @@
+[Unit]
+Description=Run the ClamAV scan every night
+
+[Timer]
+OnCalendar=*-*-* 09:30:00 UTC
+RandomizedDelaySec=20m
+Persistent=true
+
+[Install]
+WantedBy=timers.target

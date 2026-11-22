@@ -1,0 +1,5 @@
+{
+  "private": true,
+  "type": "module",
+  "//": "Not an npm workspace. Imported via tsconfig path alias + metro extraNodeModules. This file exists only to mark kernel/**/*.ts as ESM for tsx / Node."
+}

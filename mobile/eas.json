@@ -1,0 +1,68 @@
+{
+  "cli": {
+    "version": ">= 16.0.0",
+    "appVersionSource": "remote"
+  },
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal",
+      "ios": {
+        "simulator": false
+      },
+      "env": {
+        "EXPO_PUBLIC_API_BASE": "https://chordapp.ai",
+        "EXPO_PUBLIC_WEB_BASE": "https://chordapp.ai",
+        "EXPO_PUBLIC_GOOGLE_CLIENT_ID_IOS": "178917388887-iuo4l866km4up04s0mhcld00hhmq0m36.apps.googleusercontent.com",
+        "EXPO_PUBLIC_GOOGLE_CLIENT_ID_WEB": "178917388887-56snv7ef31s2cvsqcvibdksn7gs7kram.apps.googleusercontent.com",
+        "EXPO_PUBLIC_TELEGRAM_BOT_HANDLE": "@gruntworkbot"
+      },
+      "channel": "development"
+    },
+    "preview": {
+      "distribution": "internal",
+      "ios": {
+        "simulator": false
+      },
+      "android": {
+        "buildType": "apk"
+      },
+      "env": {
+        "EXPO_PUBLIC_API_BASE": "https://chordapp.ai",
+        "EXPO_PUBLIC_WEB_BASE": "https://chordapp.ai",
+        "EXPO_PUBLIC_GOOGLE_CLIENT_ID_IOS": "178917388887-iuo4l866km4up04s0mhcld00hhmq0m36.apps.googleusercontent.com",
+        "EXPO_PUBLIC_GOOGLE_CLIENT_ID_WEB": "178917388887-56snv7ef31s2cvsqcvibdksn7gs7kram.apps.googleusercontent.com",
+        "EXPO_PUBLIC_TELEGRAM_BOT_HANDLE": "@gruntworkbot",
+        "EXPO_PUBLIC_REVENUECAT_IOS_KEY": "appl_ZPpuYQxeKqmplXZjCICzdNedlhd"
+      },
+      "channel": "preview"
+    },
+    "production": {
+      "autoIncrement": true,
+      "android": {
+        "buildType": "app-bundle"
+      },
+      "env": {
+        "EXPO_PUBLIC_API_BASE": "https://chordapp.ai",
+        "EXPO_PUBLIC_WEB_BASE": "https://chordapp.ai",
+        "EXPO_PUBLIC_GOOGLE_CLIENT_ID_IOS": "178917388887-iuo4l866km4up04s0mhcld00hhmq0m36.apps.googleusercontent.com",
+        "EXPO_PUBLIC_GOOGLE_CLIENT_ID_WEB": "178917388887-56snv7ef31s2cvsqcvibdksn7gs7kram.apps.googleusercontent.com",
+        "EXPO_PUBLIC_TELEGRAM_BOT_HANDLE": "@gruntworkbot",
+        "EXPO_PUBLIC_REVENUECAT_IOS_KEY": "appl_ZPpuYQxeKqmplXZjCICzdNedlhd"
+      },
+      "channel": "production"
+    }
+  },
+  "submit": {
+    "production": {
+      "ios": {
+        "ascAppId": "6776008039"
+      },
+      "android": {
+        "serviceAccountKeyPath": "./play-service-account.json",
+        "track": "internal",
+        "releaseStatus": "draft"
+      }
+    }
+  }
+}

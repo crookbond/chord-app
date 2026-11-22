@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="%LANG_ISO_CODE%">
+  <head>
+    <meta charset="utf-8" />
+    <!--
+      Content security policy for the web app. Email HTML is not rendered in
+      this document: it is drawn in a sandboxed srcdoc iframe with an opaque
+      origin (mobile/src/email-body.tsx), whose own policy (kernel
+      emailBodyCsp) allows only Chord's nonce'd fit probe and images from the
+      API; a srcdoc frame also inherits this policy, so both apply and the
+      narrower one wins. Scripts only from this origin
+      and the exact file-viewer libraries (kernel/src/file-render-page.ts,
+      RENDER_LIBS - a test checks they match); no plugins from elsewhere, no
+      <base> or form posts to other sites, frames only from this origin or the
+      viewer's own blobs.
+      'unsafe-inline'/'unsafe-eval' stay: the file viewer's srcdoc page
+      inherits this policy and runs nonce-gated inline script, and Metro's
+      split-bundle loader evals chunks. Images and connections stay open
+      (the API can be another origin, and http in development).
+    -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' blob: https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.min.mjs https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js https://cdn.jsdelivr.net/npm/docx-preview@0.3.5/dist/docx-preview.min.js https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: blob: https://fonts.gstatic.com; img-src 'self' data: blob: https: http:; media-src 'self' data: blob: https: http:; connect-src 'self' blob: https: http: wss: ws:; frame-src 'self' blob:; worker-src 'self' blob:; object-src 'self' blob:; base-uri 'self'; form-action 'self'; manifest-src 'self'"
+    />
+    <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>%WEB_TITLE%</title>
+    <meta name="description" content="Chord is the action-oriented email reader: it turns what your email asks of you into one-tap events, to-dos, replies and unsubscribes. iPhone, Android and web." />
+    <link rel="alternate" type="text/plain" href="/llms.txt" title="About Chord for AI tools" />
+    <!-- The `react-native-web` recommended style reset: https://necolas.github.io/react-native-web/docs/setup/#root-element -->
+    <style id="expo-reset">
+      /* These styles make the body full-height */
+      html,
+      body {
+        height: 100%;
+      }
+      /* These styles disable body scrolling if you are using <ScrollView> */
+      body {
+        overflow: hidden;
+      }
+      /* These styles make the root element full-height */
+      #root {
+        display: flex;
+        height: 100%;
+        flex: 1;
+      }
+    </style>
+  </head>
+
+  <body>
+    <noscript>
+      You need to enable JavaScript to run this app.
+    </noscript>
+    <div id="root"></div>
+  </body>
+</html>

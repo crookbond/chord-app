@@ -1,0 +1,11 @@
+{
+  "name": "@chord/client",
+  "version": "0.0.0",
+  "private": true,
+  "license": "AGPL-3.0-only",
+  "description": "Phase 4 admin UI placeholder",
+  "scripts": {
+    "dev": "echo 'client/ is a Phase 4 placeholder' && exit 0",
+    "typecheck": "echo 'client/ not implemented yet' && exit 0"
+  }
+}

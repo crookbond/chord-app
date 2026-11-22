@@ -1,0 +1,25 @@
+[Unit]
+Description=Chord worker (ADR 0172 — proactive scheduler, mail sync, push publisher; see chord.service for the HTTP role)
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=__APP_DIR__/server
+EnvironmentFile=__APP_DIR__/.env
+# ADR 0211: see chord.service.
+#SECRETS#ExecStartPre=+/usr/bin/env node /usr/local/lib/chord/fetch-secrets.mjs
+#SECRETS#EnvironmentFile=-/run/chord-secrets/secrets.env
+Environment=DATA_DIR=__DATA_DIR__
+Environment=LOGS_DIR=__LOGS_DIR__
+Environment=NODE_ENV=production
+# Node itself, with tsx as a loader: the tsx command runs a second process and
+# force-kills a busy child 60 ms into a stop, exiting 143 (ADR 0227 addendum).
+ExecStart=/usr/bin/env node --enable-source-maps --import tsx src/entrypoints/worker.ts
+Restart=always
+RestartSec=3
+# ADR 0227: see chord.service.
+#CRASH#ExecStopPost=-+/bin/sh -c '[ "$$SERVICE_RESULT" = success ] || systemd-run --no-block --collect --quiet /usr/bin/env node /usr/local/lib/chord/crash-report.mjs %n "$$SERVICE_RESULT" "$$EXIT_CODE" "$$EXIT_STATUS" "$$INVOCATION_ID"'
+User=__REMOTE_USER__
+
+[Install]
+WantedBy=multi-user.target

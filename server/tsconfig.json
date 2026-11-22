@@ -1,0 +1,17 @@
+{
+  "extends": "../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "dist",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "lib": ["ES2022"],
+    "types": ["node"],
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],
+      "@chord/kernel": ["../kernel/src/index.ts"],
+      "@chord/kernel/*": ["../kernel/src/*"]
+    }
+  },
+  "include": ["src/**/*", "scripts/**/*", "../kernel/src/**/*"]
+}

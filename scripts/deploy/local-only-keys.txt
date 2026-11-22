@@ -1,0 +1,4 @@
+# Settings that are secret but only the deploying machine needs (ADR 0211). In SECRETS_MODE=only they are
+# removed from the /srv/chord/.env that reaches the VM and are NOT stored in Secret Manager: the VM never
+# uses them. Names only.
+MAXMIND_LICENSE_KEY

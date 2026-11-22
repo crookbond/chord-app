@@ -1,0 +1,28 @@
+[Unit]
+Description=Chord web (ADR 0172 — HTTP API + SSE; see chord-worker.service for the background role)
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=__APP_DIR__/server
+EnvironmentFile=__APP_DIR__/.env
+# ADR 0211: switched on by deploy.sh when SECRETS_MODE is fetch|only (a comment otherwise). Runs as
+# root, fetches the secrets into tmpfs before the app starts; the second file wins over .env.
+#SECRETS#ExecStartPre=+/usr/bin/env node /usr/local/lib/chord/fetch-secrets.mjs
+#SECRETS#EnvironmentFile=-/run/chord-secrets/secrets.env
+Environment=DATA_DIR=__DATA_DIR__
+Environment=LOGS_DIR=__LOGS_DIR__
+Environment=NODE_ENV=production
+# Node itself, with tsx as a loader: the tsx command runs a second process and
+# force-kills a busy child 60 ms into a stop, exiting 143 (ADR 0227 addendum).
+ExecStart=/usr/bin/env node --enable-source-maps --import tsx src/entrypoints/web.ts
+Restart=always
+RestartSec=3
+# ADR 0227: switched on by deploy.sh when CRASH_REPORT_REPO is set (a comment otherwise). After an
+# abnormal stop, starts the crash reporter as root in its own transient unit, so the restart above
+# never waits on it and its failure never counts against this service.
+#CRASH#ExecStopPost=-+/bin/sh -c '[ "$$SERVICE_RESULT" = success ] || systemd-run --no-block --collect --quiet /usr/bin/env node /usr/local/lib/chord/crash-report.mjs %n "$$SERVICE_RESULT" "$$EXIT_CODE" "$$EXIT_STATUS" "$$INVOCATION_ID"'
+User=__REMOTE_USER__
+
+[Install]
+WantedBy=multi-user.target
