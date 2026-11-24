@@ -810,6 +810,20 @@ export const env = {
   // ADR 0288 — how close in meaning a file must be to the conversation before a
   // bot turn puts it in the prompt. Stricter than search: nobody asked for it.
   RETRIEVAL_SEMANTIC_MIN_SIM: num('RETRIEVAL_SEMANTIC_MIN_SIM', 0.35),
+  // ADR 0351 — a push naming one feature the user has not tried, sent once
+  // per absence to someone who has not opened the app for REENGAGE_IDLE_DAYS.
+  // On by default: anyone with notifications off gets nothing anyway.
+  REENGAGE_ENABLED: bool('REENGAGE_ENABLED', true),
+  REENGAGE_IDLE_DAYS: num('REENGAGE_IDLE_DAYS', 2),
+  // Gone longer than this and we stop trying (their session may have expired).
+  REENGAGE_MAX_IDLE_DAYS: num('REENGAGE_MAX_IDLE_DAYS', 21),
+  // Never two nudges closer than this, however often they come and go.
+  REENGAGE_MIN_GAP_DAYS: num('REENGAGE_MIN_GAP_DAYS', 7),
+  REENGAGE_SWEEP_MINUTES: int('REENGAGE_SWEEP_MINUTES', 30),
+  REENGAGE_BATCH: int('REENGAGE_BATCH', 50),
+  // Local hours (in the user's zone) a nudge may go out: [start, end).
+  REENGAGE_START_HOUR: int('REENGAGE_START_HOUR', 10),
+  REENGAGE_END_HOUR: int('REENGAGE_END_HOUR', 19),
 } as const;
 
 function deriveSignupUrl(): string {

@@ -327,6 +327,7 @@ import {
 } from './external-actions.js';
 import { enrichExternalActionQuery, findFlightForPassenger } from './external-actions-enrich.js';
 import { resolvePackageTracking } from './package-tracking.js';
+import { setFeatureTips } from '../reengage/reengage.service.js';
 import {
   cancelLatestQueuedSend,
   queueComposedEmail,
@@ -7433,6 +7434,19 @@ async function applyToolCallImpl(
             : UNSUBSCRIBE_OUTCOME_INSTRUCTION,
         },
         ...(out.url ? { card: unsubscribeLinkCard(who, out.url) } : {}),
+      };
+    }
+
+    case 'set_feature_tips': {
+      const args = call.args as { enabled?: boolean };
+      if (!actorUserId) return { summary: 'set_feature_tips: no actor' };
+      if (!(await isPersonalTurn(db, groupId))) {
+        return { summary: 'set_feature_tips: refused — personal chats only', data: { ok: false } };
+      }
+      const on = await setFeatureTips(db, actorUserId, args.enabled ?? null);
+      return {
+        summary: `set_feature_tips: feature tips ${on ? 'on' : 'off'}`,
+        data: { ok: true, enabled: on },
       };
     }
 

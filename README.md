@@ -617,7 +617,7 @@ mobile/   Expo SDK 54 + expo-router — one app for iOS, Android and web
 server/   Express 4 + TypeScript — API, SSE, the AI agent, mail and calendar sync, workers
 kernel/   Shared TypeScript types, zod schemas and API paths
 scripts/  Deploy, website and ops scripts
-docs/     Architecture, subsystems, runbooks and 352 decision records (ADRs)
+docs/     Architecture, subsystems, runbooks and 353 decision records (ADRs)
 ```
 
 - **AI agent with tool calling**: native function calling on OpenAI, Anthropic

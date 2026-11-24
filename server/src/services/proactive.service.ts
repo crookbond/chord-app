@@ -42,6 +42,7 @@ import { maybePruneOldRows } from './retention.service.js';
 import { maybeCleanupMemories } from './memory-cleanup.service.js';
 import { maybeDrainAiBacklog } from './ai-backlog-runners.js';
 import { sweepCalendars } from './google/calendar-sweep.js';
+import { maybeSweepReengage } from './reengage/reengage.service.js';
 import { sweepEmbeddings } from './search/embed-pass.js';
 import { sweepReportEmails } from './reports.service.js';
 import { topUpSeries } from './events/series.service.js';
@@ -2479,6 +2480,14 @@ export async function drainOnce(db: Kysely<DB>): Promise<void> {
     if (n > 0) logger.info(`embedding sweep updated ${n} user(s)`);
   } catch (err) {
     logger.error('embedding sweep failed', { err });
+  }
+
+  // ADR 0351 — a feature tip for someone who has not opened the app lately.
+  try {
+    const n = await maybeSweepReengage(db);
+    if (n > 0) logger.info(`reengage nudges sent: ${n}`);
+  } catch (err) {
+    logger.error('reengage sweep failed', { err });
   }
 
   // ADR 0301 — a report whose email did not go out is retried.

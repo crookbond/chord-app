@@ -475,6 +475,8 @@ export default function UserSettingsScreen() {
   const [keyProvider, setKeyProvider] = useState<ModelProvider>('openai');
   const [keyModel, setKeyModel] = useState('');
   const [keyValue, setKeyValue] = useState('');
+  // With a key stored, the connect button and key form stay hidden until asked for.
+  const [editingKey, setEditingKey] = useState(false);
   const [keyBaseUrl, setKeyBaseUrl] = useState('');
 
   const [busy, setBusy] = useState<
@@ -1705,6 +1707,7 @@ export default function UserSettingsScreen() {
           : s,
       );
       setKeyValue('');
+      setEditingKey(false);
     } catch (e) {
       setErr((e as Error).message);
     } finally {
@@ -1731,6 +1734,7 @@ export default function UserSettingsScreen() {
       setKeyModel('');
       setKeyValue('');
       setKeyBaseUrl('');
+      setEditingKey(false);
     } catch (e) {
       setErr((e as Error).message);
     } finally {
@@ -1749,6 +1753,7 @@ export default function UserSettingsScreen() {
       }
       if (status !== 'ok' && status !== 'needs_credit') return;
       await refreshAll();
+      setEditingKey(false);
       setByokMsg(
         status === 'ok'
           ? 'Connected to OpenRouter. Chord now uses your key.'
@@ -2034,10 +2039,16 @@ export default function UserSettingsScreen() {
           </View>
           {settings?.hasModelKey && (
             <Text style={[styles.muted, { marginTop: 6 }]}>
-              Currently using: <Text style={styles.systemTxtBold}>your BYO</Text> ·{' '}
-              {settings.modelProvider ? labelProvider(settings.modelProvider) : '-'} ·{' '}
-              {settings.modelName ?? '-'}
-              {settings.modelBaseUrl ? ` · ${settings.modelBaseUrl}` : ''}
+              Currently using: <Text style={styles.systemTxtBold}>your own key</Text> ·{' '}
+              {settings.modelBaseUrl?.includes('openrouter.ai')
+                ? 'OpenRouter'
+                : settings.modelProvider
+                  ? labelProvider(settings.modelProvider)
+                  : '-'}{' '}
+              · {settings.modelName ?? '-'}
+              {settings.modelBaseUrl && !settings.modelBaseUrl.includes('openrouter.ai')
+                ? ` · ${settings.modelBaseUrl}`
+                : ''}
             </Text>
           )}
           {!settings?.hasModelKey && settings?.systemLlm && (
@@ -2046,6 +2057,40 @@ export default function UserSettingsScreen() {
             </Text>
           )}
 
+          {settings?.hasModelKey && !editingKey && billing?.byokKeyIssue?.kind !== 'auth' ? (
+            <>
+              {byokMsg ? <Text style={[styles.muted, { marginTop: 6 }]}>{byokMsg}</Text> : null}
+              <View style={styles.btnRow}>
+                <Pressable
+                  style={[styles.btnGhostSmall, busy !== null && styles.btnDisabled]}
+                  disabled={busy !== null}
+                  onPress={() => {
+                    setByokMsg(null);
+                    setEditingKey(true);
+                  }}
+                >
+                  <Text style={styles.btnGhostSmallTxt}>Change model or key</Text>
+                </Pressable>
+                <Pressable
+                  style={[styles.btnGhostSmall, busy !== null && styles.btnDisabled]}
+                  disabled={busy !== null}
+                  onPress={() => void clearKey()}
+                >
+                  {busy === 'clearKey' ? (
+                    <ActivityIndicator size="small" color={colors.accent} />
+                  ) : (
+                    <Text style={styles.btnGhostSmallTxt}>Remove my key</Text>
+                  )}
+                </Pressable>
+              </View>
+              {settings?.systemLlm ? (
+                <Text style={[styles.muted, { marginTop: 6 }]}>
+                  Removing your key puts Chord back on its own model.
+                </Text>
+              ) : null}
+            </>
+          ) : (
+          <>
           <View style={styles.byokHeader}>
             <Text style={[styles.fieldLabel, styles.byokLabel]}>Bring your own key</Text>
             <Pressable
@@ -2121,7 +2166,7 @@ export default function UserSettingsScreen() {
           <TextInput
             value={keyValue}
             onChangeText={setKeyValue}
-            placeholder={settings?.hasModelKey ? '•••••• (replace stored key)' : 'sk-…'}
+            placeholder={settings?.hasModelKey ? 'Paste the new key' : 'sk-…'}
             placeholderTextColor={colors.muted}
             autoCapitalize="none"
             autoCorrect={false}
@@ -2144,6 +2189,18 @@ export default function UserSettingsScreen() {
                 <Text style={styles.btnSmallTxt}>Save</Text>
               )}
             </Pressable>
+            {settings?.hasModelKey && editingKey && (
+              <Pressable
+                style={[styles.btnGhostSmall, busy !== null && styles.btnDisabled]}
+                disabled={busy !== null}
+                onPress={() => {
+                  setKeyValue('');
+                  setEditingKey(false);
+                }}
+              >
+                <Text style={styles.btnGhostSmallTxt}>Cancel</Text>
+              </Pressable>
+            )}
             {settings?.hasModelKey && (
               <Pressable
                 style={[styles.btnGhostSmall, busy !== null && styles.btnDisabled]}
@@ -2153,13 +2210,13 @@ export default function UserSettingsScreen() {
                 {busy === 'clearKey' ? (
                   <ActivityIndicator size="small" color={colors.accent} />
                 ) : (
-                  <Text style={styles.btnGhostSmallTxt}>
-                    {settings?.systemLlm ? 'Use system default' : 'Clear'}
-                  </Text>
+                  <Text style={styles.btnGhostSmallTxt}>Remove my key</Text>
                 )}
               </Pressable>
             )}
           </View>
+          </>
+          )}
         </Disclosure>
 
         <SectionHeader title="Connected accounts" />

@@ -31,3 +31,23 @@ export function keyboardRevealDelta(input: {
   const toKeepTop = input.boxTop - (visibleTop + margin);
   return Math.max(0, Math.min(toFitBottom, toKeepTop));
 }
+
+/**
+ * How much of a view the Android keyboard covers. React Native's
+ * `measureInWindow` on Android reports y from the bottom of the status bar
+ * (it subtracts the visible display frame's top), while `keyboardDidShow`'s
+ * `screenY` is measured from the top of the screen. Without adding the status
+ * bar back, a view's bottom reads that much higher than it is, and a
+ * composer padded by the result sits under the keyboard on an edge-to-edge
+ * window (Android 15+, which no longer shrinks for the keyboard).
+ */
+export function androidKeyboardOverlap(input: {
+  /** Bottom of the view from `measureInWindow` (y + height). */
+  viewBottomInWindow: number;
+  /** `endCoordinates.screenY` of the keyboard event. */
+  keyboardScreenY: number;
+  /** Status bar height (`StatusBar.currentHeight`). */
+  statusBarHeight: number;
+}): number {
+  return Math.max(0, input.viewBottomInWindow + input.statusBarHeight - input.keyboardScreenY);
+}

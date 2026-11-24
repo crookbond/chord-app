@@ -47,6 +47,37 @@ export function prevInWalk(walk: EmailWalk, current: string): string | null {
   return [...walk.ids.slice(0, i)].reverse().find((id) => !walk.removed?.has(id)) ?? null;
 }
 
+/**
+ * The order to walk when the list republishes itself mid-walk. With Unread on,
+ * a refetch leaves out every email read since the walk began, the one on
+ * screen included, and an email not in the order has no next: putting it away
+ * cleared the reader. Each `keep` id the new order lacks goes back where it
+ * was, just before the first email that followed it and is still there.
+ */
+export function mergeWalkOrder(
+  prev: readonly string[],
+  next: readonly string[],
+  keep: ReadonlySet<string>,
+): string[] {
+  const inNext = new Set(next);
+  const kept = prev.filter((id) => keep.has(id) && !inNext.has(id));
+  if (kept.length === 0) return [...next];
+  // Each kept id is anchored to the first id after it in `prev` that `next` has.
+  const before = new Map<string, string[]>();
+  const atEnd: string[] = [];
+  const keptSet = new Set(kept);
+  for (let i = 0; i < prev.length; i++) {
+    const id = prev[i]!;
+    if (!keptSet.has(id)) continue;
+    const anchor = prev.slice(i + 1).find((later) => inNext.has(later));
+    if (anchor) before.set(anchor, [...(before.get(anchor) ?? []), id]);
+    else atEnd.push(id);
+  }
+  const out: string[] = [];
+  for (const id of next) out.push(...(before.get(id) ?? []), id);
+  return [...out, ...atEnd];
+}
+
 /** Where to go once `current` has been archived or trashed; null = back to the list. */
 export function afterRemoveTarget(walk: EmailWalk, current: string): string | null {
   const next = nextInWalk(walk, current);

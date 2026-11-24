@@ -118,10 +118,13 @@ export async function refreshPushRegistration(): Promise<void> {
 export function addNotificationTapHandler(): { remove: () => void } {
   return Notifications.addNotificationResponseReceivedListener((response) => {
     const data = response.notification.request.content.data as
-      | { groupId?: string }
+      | { groupId?: string; url?: string }
       | undefined;
     if (data?.groupId) {
       router.push(`/groups/${data.groupId}`);
+    } else if (typeof data?.url === 'string' && data.url.startsWith('/') && !data.url.startsWith('//')) {
+      // ADR 0351 - a feature tip opens the screen it names. In-app paths only.
+      router.push(data.url as never);
     }
   });
 }

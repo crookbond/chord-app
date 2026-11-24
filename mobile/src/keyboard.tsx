@@ -31,6 +31,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  StatusBar,
   StyleSheet,
   type NativeScrollEvent,
   type NativeSyntheticEvent,
@@ -39,7 +40,7 @@ import {
   View,
   type ViewStyle,
 } from 'react-native';
-import { keyboardOffset, keyboardRevealDelta } from '@chord/kernel';
+import { androidKeyboardOverlap, keyboardOffset, keyboardRevealDelta } from '@chord/kernel';
 
 import { useOfflineStripHeight } from '@/offline-bar';
 
@@ -127,7 +128,14 @@ function AndroidKeyboardScreen({ children, style }: { children: ReactNode; style
 
   // Padding sits inside the view, so its outer bottom does not move when it
   // changes; it moves only if the window itself shrank, which onLayout catches.
-  const overlap = keyboardTop != null && bottom != null ? Math.max(0, bottom - keyboardTop) : 0;
+  const overlap =
+    keyboardTop != null && bottom != null
+      ? androidKeyboardOverlap({
+          viewBottomInWindow: bottom,
+          keyboardScreenY: keyboardTop,
+          statusBarHeight: StatusBar.currentHeight ?? 0,
+        })
+      : 0;
   return (
     <View ref={box} style={[style, overlap > 0 ? { paddingBottom: overlap } : null]} onLayout={measure}>
       {children}

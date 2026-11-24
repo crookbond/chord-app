@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { mergeWalkOrder } from '@chord/kernel';
 import type {
   EmailAfterRemove,
   EmailThreadDetail,
@@ -87,10 +88,17 @@ export const useEmailThreadNav = create<EmailThreadNavState>((set) => ({
   setNav: (ids, hasMore, loadMore, scope = 'list', readIds = [], rows = []) =>
     set((s) => {
       // A different order starts a new walk; the same one republished (a
-      // refetch, a page appended) keeps what was read on the way.
-      const read = new Set(s.scope === scope ? s.read : []);
+      // refetch, a page appended) keeps what was read on the way - and keeps
+      // those emails in the order, since an Unread refetch leaves out the one
+      // on screen and it would then have no next (kernel mergeWalkOrder).
+      const sameWalk = s.scope === scope;
+      const read = new Set(sameWalk ? s.read : []);
       for (const id of readIds) read.add(id);
-      return { ids, rows: [...rows], hasMore, loadMore, scope, read };
+      const keep = new Set([...read].filter((id) => !s.removing.has(id) && !s.removedAt.has(id)));
+      // Only in a walk, where next skips a read email: the plain list visits
+      // read mail, so a kept row it has dropped would come back as next.
+      const order = sameWalk && scope !== 'list' ? mergeWalkOrder(s.ids, ids, keep) : ids;
+      return { ids: order, rows: [...rows], hasMore, loadMore, scope, read };
     }),
   clearNav: () =>
     set({ ids: [], rows: [], hasMore: false, loadMore: null, scope: null, read: new Set() }),

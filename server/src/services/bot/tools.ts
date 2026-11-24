@@ -729,6 +729,10 @@ export const toolSchemas = {
   set_email_digest: z.object({
     enabled: z.boolean(),
   }),
+  /** ADR 0351 — the occasional "try this feature" push; omit enabled to read. */
+  set_feature_tips: z.object({
+    enabled: z.boolean().optional(),
+  }),
   /** ADR 0283 — turn Chord's AI off for the asker (granting is AGREE, read in code). */
   withdraw_ai_consent: z.object({}),
   /** ADR 0214 — mute/resume the briefing on one WhatsApp chat (ADR 0091). */
@@ -1396,6 +1400,7 @@ record_rsvp: 'Upsert an RSVP for an event (yes / no / maybe / pending).',
   delete_group: 'Delete one of the asker\'s SHARED chats FOR EVERYONE ("delete the soccer group"). Only the chat\'s owner can: if they are not the owner you get `not_owner` back — say so and offer to leave it instead. `groupName` is the chat\'s name as the user says it; if it matches none or several you get candidates back — ask which. **NOTHING IS DELETED BY THIS CALL** — it stages a card the user taps to confirm; say it is waiting for their OK, never that it was deleted. It permanently removes every message, file, task and event in that chat for every member and cannot be undone. Personal 1:1 only.',
   set_email_signature: 'Set or clear the signature on the asker\'s outgoing email. Fire this for "set my signature to ...", "add my website to my signature", "remove my signature". Give `text` for plain text (a markdown link like [chordapp.ai](https://chordapp.ai) becomes a clickable link in the HTML version), or `html` for a rich signature (links, bold, colours, simple tables, https images; anything else is removed on the server). `clear: true` removes it. Replaces the previous signature. Each mailbox can have its own: give `mailbox` ONLY when the user named one ("my work signature", "for Outlook", an address); without it the signature is the shared one, used by every mailbox that has none of its own. `mailbox` + `useShared: true` puts that mailbox back on the shared one; `mailbox` + `clear: true` makes that mailbox send none. To put a logo or photo the user sent in this chat into the signature ("use this picture in my signature"), give its attachment id as `pictureFileId`: it goes under the `text`/`html` you give, or under the current signature when you give neither; only when the user asked for a picture. Say what you saved, never claim features it does not have. Personal 1:1 only.',
   delete_messages: 'Delete chat messages from THIS chat. Fire this for "clear this chat", "delete all these messages" (scope "all") or "delete the last 3 messages", "delete that last message" (scope "last" with `count`, default 1 — the newest messages before this request). In the user\'s personal chat the messages are really deleted. In a shared chat they are removed from the ASKER\'S view only — every other member still sees them — so say "removed from your view", never that the chat was deleted for everyone. Scope "all" clears the chat as it stands now; later messages show as usual. **NOTHING IS DELETED BY THIS CALL** — it stages a card the user taps to confirm; say it is waiting for their OK, never that it was deleted. It cannot be undone. It does not delete files (those stay in Attachments), tasks, events or anything the messages created, and it does not unsend a message already delivered to WhatsApp or another bridged app.',
+  set_feature_tips: 'Turn Chord\'s occasional feature-tip notifications on or off ("stop sending me tips", "no more reminders to use features", "turn tips back on"). These are the pushes Chord sends after a few days away, naming one feature the user has not tried. Omit enabled to say whether they are on. Personal 1:1 chat ONLY. Does not touch any other notification.',
   set_email_digest: 'Turn the email section of the user\'s morning briefing on or off. Fire this for "stop putting my email in the briefing", "include my inbox in the morning briefing again". Personal 1:1 chat ONLY. This is the WHOLE email section; to hide only certain senders or topics use set_briefing_exclusion instead. It does not touch the briefing itself (set_nudge_time does) or any email.',
   withdraw_ai_consent: 'Turn OFF all of Chord\'s AI for the asker: no more replies from you, email suggestions, AI briefing or meaning search on their data, until they reply AGREE or allow it in Settings → AI model. Fire this only for an explicit "stop using AI on my data", "turn off Chord\'s AI", "I withdraw my consent" — and ask them to confirm first, since it also stops you answering them. Personal 1:1 chat ONLY. It does not delete anything.',
   set_briefing_channel: 'Mute or resume the morning briefing on one WhatsApp chat, leaving the app and push notifications as they are. Fire this for "stop sending my briefing on WhatsApp", "start sending the briefing here again". Personal 1:1 chat ONLY. `groupName` picks the chat when the user has more than one WhatsApp chat with Chord; omit it when they have one. When the result says `ambiguous`, list the `channels` it returns by name and ask which; `no_channels` means no WhatsApp chat is connected. To stop the briefing EVERYWHERE use set_nudge_time with enabled=false instead.',
@@ -1780,6 +1785,7 @@ export const PERSONAL_ONLY_TOOL_NAMES: ReadonlySet<ToolName> = new Set<ToolName>
   'query_mail_senders',
   'query_receipts',
   'set_email_digest',
+  'set_feature_tips',
   'set_briefing_channel',
   'withdraw_ai_consent',
   // ADR 0197 — busy blocks span every group the asker is in (owner-scoped,
@@ -2097,6 +2103,7 @@ Available tools:
 - set_email_signature { text?, html?, clear?, mailbox?, useShared?, pictureFileId? }   // "set my signature to ...". Plain text (markdown links ok) or HTML; replaces the old one. mailbox only when the user named one; pictureFileId = a picture they sent in this chat. Personal 1:1 only.
 - delete_messages { scope: "last"|"all", count? }   // "clear this chat" / "delete the last 3 messages". Stages a card the user taps; never say it was deleted. Shared chats: removed from the asker's view only, others still see them. Cannot be undone.
 - set_email_digest { enabled }   // the email section of the morning briefing on/off. Personal chats only.
+- set_feature_tips { enabled? }   // "stop sending me tips" / "turn tips back on". The feature-tip pushes after a few days away. Personal chats only.
 - withdraw_ai_consent { }   // "stop using AI on my data" / "turn off Chord's AI". Turns ALL of Chord's AI off for the asker; confirm first. Personal chats only.
 - set_briefing_channel { muted, groupName? }   // mute/resume the briefing on one WhatsApp chat. Personal chats only.
 - verify_phone { phone?, code? }   // the user's own number: call with phone to text a code, then with code to verify. Confirm only on verified:true; never write the code back. Personal chats only.

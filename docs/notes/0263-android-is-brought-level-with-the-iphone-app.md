@@ -162,3 +162,39 @@ tested (the Apple return path, the calendar rules, the push message), but none
 has been exercised on an Android phone. The Apple flow in particular depends on
 the Custom Tab handing the `/nativeauth` App Link back with its fragment, which
 is the same unverified mechanism as Google sign-in on Android.
+
+## Addendum 2026-11-23: R8 on release builds, and the edge-to-edge warning
+
+Play Console flagged two things on Production release 7 (1.0.0).
+
+**DEX obfuscation at 2% (Play wants 25%, by Feb 2027).** Release builds were
+not minified. `expo-build-properties` now sets
+`android.enableMinifyInReleaseBuilds` (R8 shrinks and renames; the Expo
+template's `proguard-rules.pro` already keeps reanimated and the turbomodule
+classes). Every native module Chord ships either needs no rule (React Native,
+Hermes, screens, gesture handler and safe-area work through annotations RN's
+own consumer rules keep) or brings its own consumer rules (expo-modules-core,
+expo-updates, expo-notifications, reanimated, worklets). The extra rules keep
+RevenueCat whole (`react-native-purchases` ships none of its own, and the
+classes are iOS-only in use today, so the keep costs nothing that matters) and
+keep file and line numbers in stack traces. Resource shrinking stays OFF: some
+resources are found by name at run time (the notification icon), which the
+shrinker cannot see. A preview APK is built `release`, so it is minified too
+and is the device test. The R8 mapping file travels inside the app bundle
+(AGP puts it in BUNDLE-METADATA, and Play reads it for crash reports); EAS also
+keeps `mapping.txt` as a build artifact (`buildArtifactPaths`) for uploading by
+hand if Play does not show it under App bundle explorer, Downloads.
+
+**"Deprecated APIs or parameters for edge-to-edge" (recommended, no deadline).**
+Not caused by Chord's code or config. The app is already edge-to-edge (SDK 54
+default; `edgeToEdgeEnabled=true` in the generated project), and Play's scan
+reads the compiled code, so a call guarded by an Android version check still
+counts. The calls it finds are in libraries: React Native 0.81's
+`WindowUtil.enableEdgeToEdge` and `StatusBarModule` (`setStatusBarColor`,
+`setNavigationBarColor`, `LAYOUT_IN_DISPLAY_CUTOUT_MODE_*`),
+react-native-screens' `ScreenWindowTraits`, and expo-image-picker's crop
+screen. They clear when those libraries drop the calls (an Expo SDK upgrade),
+not through anything in `app.json`. The generated theme also carries
+`android:statusBarColor`, written by Expo's own splash plugin whatever the
+config says, and ignored by Android 15+. `useAndroidBottomInset` and the
+keyboard handling are unchanged.

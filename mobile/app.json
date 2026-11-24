@@ -133,6 +133,15 @@
         {
           "faceIDPermission": false
         }
+      ],
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "enableMinifyInReleaseBuilds": true,
+            "extraProguardRules": "-keep class com.revenuecat.purchases.** { *; }\n-dontwarn com.revenuecat.purchases.**\n-keepattributes SourceFile,LineNumberTable\n-renamesourcefileattribute SourceFile"
+          }
+        }
       ]
     ],
     "experiments": {

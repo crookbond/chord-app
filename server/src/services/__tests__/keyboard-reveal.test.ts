@@ -4,7 +4,7 @@
  */
 import { describe, expect, it } from 'vitest';
 
-import { keyboardRevealDelta } from '@chord/kernel';
+import { androidKeyboardOverlap, keyboardRevealDelta } from '@chord/kernel';
 
 const phone = { windowHeight: 800, keyboardHeight: 300 };
 
@@ -25,5 +25,28 @@ describe('keyboardRevealDelta', () => {
   it('a box taller than the room left keeps its top in view', () => {
     // A 400-tall note box at 300: fitting its bottom would push its top off screen.
     expect(keyboardRevealDelta({ ...phone, boxTop: 300, boxHeight: 400, visibleTop: 90 })).toBe(186);
+  });
+});
+
+describe('androidKeyboardOverlap', () => {
+  // Pixel-class phone, edge-to-edge (Android 15+): 915dp tall, 40dp status
+  // bar, keyboard top at 555dp. The chat screen runs to the bottom of the
+  // screen, so measureInWindow (which starts below the status bar) reads
+  // its bottom as 875, not 915.
+  const chat = { viewBottomInWindow: 875, keyboardScreenY: 555, statusBarHeight: 40 };
+
+  it('pads by the whole covered part, status bar included', () => {
+    // Without the status bar this read 320 and the 56dp composer sat
+    // under the keyboard (prod, 2026-11-23).
+    expect(androidKeyboardOverlap(chat)).toBe(360);
+  });
+
+  it('pads nothing when the window already shrank to the keyboard', () => {
+    // Older Android resizes the window: the view now ends at the keyboard.
+    expect(androidKeyboardOverlap({ ...chat, viewBottomInWindow: 515 })).toBe(0);
+  });
+
+  it('never pads negative', () => {
+    expect(androidKeyboardOverlap({ ...chat, viewBottomInWindow: 400 })).toBe(0);
   });
 });

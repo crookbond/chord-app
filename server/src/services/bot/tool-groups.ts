@@ -194,6 +194,7 @@ export const TOOL_GROUPS: readonly ToolGroup[] = [
       'connect_openrouter',
       'set_weather_location',
       'set_nudge_time',
+      'set_feature_tips',
       'send_briefing',
       'set_briefing_channel',
       'set_my_name',
@@ -207,7 +208,7 @@ export const TOOL_GROUPS: readonly ToolGroup[] = [
       'disconnect_app',
     ],
     words:
-      /billing|\bsubscription|\b(my|chord|paid|individual|annual|monthly|chord's) plan\b|pricing|\btokens?\b|\bcredits?\b|\brenew(al)? my\b|\bupgrade|\bdowngrade|(credit|payment) card|openrouter|api key|own key|byok|\b(ai|which|what) model\b|weather|my location|time ?zone|my name\b|^call me\b|verify (my )?(phone|number)|verification code|consent|privacy|\bblock (him|her|them|this person|\w+ from)\b|\bunblock|\breport (him|her|them|this|that|a message|the message)\b|\babuse|\bsettings\b|whatsapp|briefing|\bnudge|\bconnected apps?\b|\bdisconnect\b|\b(claude|chatgpt)\b/,
+      /billing|\bsubscription|\b(my|chord|paid|individual|annual|monthly|chord's) plan\b|pricing|\btokens?\b|\bcredits?\b|\brenew(al)? my\b|\bupgrade|\bdowngrade|(credit|payment) card|openrouter|api key|own key|byok|\b(ai|which|what) model\b|weather|my location|time ?zone|my name\b|^call me\b|verify (my )?(phone|number)|verification code|consent|privacy|\bblock (him|her|them|this person|\w+ from)\b|\bunblock|\breport (him|her|them|this|that|a message|the message)\b|\babuse|\bsettings\b|whatsapp|briefing|\bnudge|\b(feature )?tips?\b|\bconnected apps?\b|\bdisconnect\b|\b(claude|chatgpt)\b/,
   },
   {
     id: 'forms',
